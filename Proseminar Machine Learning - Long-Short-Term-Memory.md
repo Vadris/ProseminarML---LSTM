@@ -23,13 +23,13 @@
 
 # Sources
 ## Papers (Peer Reviewed)
-https://www.bioinf.jku.at/publications/older/2604.pdf
+- https://www.bioinf.jku.at/publications/older/2604.pdf
 ## Papers (Other)
-https://arxiv.org/pdf/2203.12105 (LSTM Music Generation)
-https://arxiv.org/pdf/1909.09586 (LSTM and RNNS Explanation)
-https://arxiv.org/pdf/1912.05911 (Introduction to RNNs)
+- https://arxiv.org/pdf/2203.12105 (LSTM Music Generation)
+- https://arxiv.org/pdf/1909.09586 (LSTM and RNNS Explanation)
+- https://arxiv.org/pdf/1912.05911 (Introduction to RNNs)
 ## Other
-https://www.youtube.com/watch?v=b61DPVFX03I (LSTM Basics)
-https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi (ML Basics)
-https://neuralnetworksanddeeplearning.com/
+- https://www.youtube.com/watch?v=b61DPVFX03I (LSTM Basics)
+- https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi (ML Basics)
+- https://neuralnetworksanddeeplearning.com/
 
