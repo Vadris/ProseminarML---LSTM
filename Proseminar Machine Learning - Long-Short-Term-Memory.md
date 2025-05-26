@@ -1,25 +1,120 @@
 # Topics:
-## 1. Introduction
-## 2. Foundational Concepts
-### 2.1. Neural Networks and Training
-### 2.2 Recursive Neural Networks
-### 2.3. Memory in Neural Networks
 
-## 3. LSTM Architecture
-### 3.1 Origin
-### 3.2 Principle of Operation
-## 4. Training & Implementation
-### 4.1 Training an LSTM
-### 4.2 Example Implementation
-## 5. Variants
+## 0. Abstract (0.5p)
 
-## 6. Applications
-### 6.1 Natural Language Processing
-### 6.2 Time Series Forecasting
-### 6.3 Music and Audio
-### 6.4 Medical
-## 7. Limitations
-## 8. Conclusion
+> Fynn
+
+## 1. Introduction (1p)
+
+> Fynn / Leon
+
+## 2. Foundational Concepts (2+1+1p)
+
+> Leon
+
+### 2.1. Neural Networks and Training (2p)
+
+basics of neural networks:
+- perceptron / multi layer perceptron
+- feed forward nn
+- loss
+- loss gradient / gradient decent
+- backpropagation
+
+### 2.2 Recurrent Neural Networks (1p)
+
+- basic idea / motivation
+- basic maths
+
+### 2.3. Limitations of Recurrent Neural Networks (1p)
+
+- backpropagation in rnns -> deminishing / exploding gradients
+- long vs short term memory
+
+## 3. LSTM Architecture (1+3p)
+
+### 3.1 Origin (1p)
+
+> Leon
+
+- previous work
+- paper by Hochreiter u. Schmidhuber et al
+
+### 3.2 Principle of Operation (3p)
+
+> Fynn
+
+- intuitive explanation of a lstm unit
+- mathematical model
+
+## 4. Training & Implementation (2+2p)
+
+### 4.1 Training an LSTM (2p)
+
+> Leon
+
+- gradient decent and backpropagation for LSTM networks
+  - intuitive explanation
+  - mathematical model
+
+### 4.2 Example Implementation (2p)
+
+> Fynn
+
+- explanation of example implementation
+
+## 5. Applications (2p)
+
+- showcase of real world use cases of lstm networks
+- why lstm networks excel at these use cases
+- when to use lstm networks
+- possible alternatives architectures for each use case
+
+### 5.1 Natural Language Processing
+
+> Leon
+
+### 5.2 Time Series Forecasting
+
+> Fynn
+
+### 5.3 Music and Audio
+
+> Fynn
+
+### 5.4 Medical
+
+> Leon
+
+## 6. Limitations and Alternatives (0.5 + n + 1 p)
+
+- when not to use lstm
+
+### 6.1 Limitations (0.5p)
+
+> Fynn
+
+- scalability, exploding gradients ...
+
+### 6.2 Variants
+
+> Leon / Fynn
+
+- other lstm based variants
+- which problems they solve in context of lstm / approach
+
+### 6.3 LSTM vs Transformers (1p)
+
+> Leon
+
+- compare the two architectures advantages / disadvantages
+
+## 7. Conclusion (0.5p)
+
+> Fynn
+
+- current relevance of lstm networks
+- future uses
 
 # Sources
 ## Papers (Peer Reviewed)
