@@ -6,7 +6,7 @@
 
 ## 1. Introduction (1p)
 
-> Fynn / Leon
+> Fynn
 
 ## 2. Foundational Concepts (2+1+1p)
 
@@ -115,6 +115,10 @@ basics of neural networks:
 
 - current relevance of lstm networks
 - future uses
+
+# Pages Total:
+- Fynn: 8.5 + n
+- Leon: 9   + n
 
 # Sources
 ## Papers (Peer Reviewed)
