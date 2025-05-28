@@ -1,0 +1,183 @@
+% Template for seminar reports
+% Computer Vision Group, Visual Computing Institute, RWTH Aachen University
+\documentclass[twoside,a4paper,10pt,DIV=12,BCOR=12mm]{scrartcl}
+\usepackage[utf8]{inputenc}    % allows special symbols in LaTeX source code
+\usepackage[english]{babel}    % select language of your report (use "ngerman" for German)
+\usepackage[T1]{fontenc}       % font encoding, important for umlauts
+\usepackage{lmodern}           % lmodern font
+\usepackage{xcolor}            % use and define colors for text and images
+\usepackage{graphicx}          % include images
+\usepackage{booktabs}          % pretty tables
+\usepackage{caption}           % captions for figures
+\usepackage{subcaption}        % captions for subfigures
+\usepackage{url}               % for website links
+\usepackage{datetime}          % month on title page
+\usepackage{hyperref}          % make references clickable
+\usepackage{xspace}            % correct spaces after e.g. "e.g."
+\usepackage{tikz}              % custom plots in LaTeX
+\usepackage{pgfplots}          % custom function graphs in LaTeX
+\usepackage{bm}                % bold math symbols
+\usepackage{amsmath}           % additional math environments
+\usepackage{amssymb}           % additional math symbols (includes amsfonts)
+\usepackage{enumitem}          % change distances for enumerations
+\usepackage{listings}          % code
+\usepackage{lipsum}            % placeholder text
+
+\newdateformat{monthyeardate}{\monthname[\THEMONTH] \THEYEAR}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\setlist{nosep}
+
+\makeatletter
+\DeclareRobustCommand\onedot{\futurelet\@let@token\@onedot}
+\def\@onedot{\ifx\@let@token.\else.\null\fi\xspace}
+\def\eg{{e.g}\onedot} \def\Eg{\emph{E.g}\onedot}
+\def\ie{{i.e}\onedot} \def\Ie{\emph{I.e}\onedot}
+\def\cf{{c.f}\onedot} \def\Cf{\emph{C.f}\onedot}
+\def\etc{{etc}\onedot} \def\vs{\emph{vs}\onedot}
+\def\wrt{w.r.t\onedot} \def\dof{d.o.f\onedot}
+\def\etal{\emph{et al}\onedot}
+\makeatother
+
+\overfullrule=1ex
+
+\pgfplotsset{compat=newest}
+
+
+% =========================================================================
+
+\graphicspath{{pictures/}}
+\setcounter{secnumdepth}{3}
+\setcounter{tocdepth}{3}
+
+% =========================================================================
+\begin{document}
+
+\include{titlepage}
+
+\begin{abstract}
+% +++++++++++++++++++++++++
+% Insert your Abstract here (one paragraph summary)
+% +++++++++++++++++++++++++
+\end{abstract}
+
+\tableofcontents
+\newpage
+% =========================================================================
+
+
+\section{Introduction}
+
+The introduction outlines the motivation for studying Long Short-Term Memory networks,
+highlighting their significance in addressing the limitations of traditional neural network
+architectures.
+(Approximately 1 page, written by Fynn)
+
+\section{Foundational Concepts}
+
+This section provides a brief introduction to foundational topics necessary
+for understanding the LSTM architecture.
+
+\subsection{Neural Networks and Training}
+
+Explains fundamental neural network concepts required to understanding LSTM networks:
+
+\begin{itemize}
+\item Perceptron and Multi-layer Perceptrons
+\item Feedforward Neural Networks
+\item Loss Functions
+\item Gradient Descent Optimization
+\item Backpropagation Algorithm
+\end{itemize}
+(Approximately 2 pages, written by Leon)
+
+\subsection{Recurrent Neural Networks}
+
+Discusses the basic idea and mathematics behind recurrent neural networks.
+(Approximately 1 page, written by Leon)
+
+\subsection{Limitations of Recurrent Neural Networks}
+
+Identifies key issues such as vanishing and exploding gradients in RNNs,
+highlighting the need for architectures capable of maintaining long-term dependencies.
+(Approximately 1 page, written by Leon)
+
+\section{LSTM Architecture}
+
+Detailed explanation and exploration of LSTM networks.
+
+\subsection{Origin}
+
+Presents historical context, foundational studies, and key developments leading up to Hochreiter and Schmidhuber's 1997 paper.
+(Approximately 1 page, written by Leon)
+
+\subsection{Principle of Operation}
+
+Provides an intuitive explanation of the components of an LSTM cell,
+including gates and internal memory mechanisms, followed by the mathematical formalization of these concepts.
+(Approximately 3 pages, written by Fynn)
+
+\section{Training and Implementation}
+
+Addresses practical considerations in training LSTM networks, including an example implementation to demonstrate real-world applications.
+
+\subsection{Training an LSTM}
+
+Explains gradient descent and backpropagation algorithms specifically adapted to
+LSTM networks, detailing both intuitive concepts and formal mathematical descriptions.
+(Approximately 2 pages, written by Leon)
+
+\subsection{Example Implementation}
+
+Presents breakdown of a sample LSTM implementation.
+(Approximately 2 pages, written by Fynn)
+
+\section{Applications}
+
+Demonstrates real-world scenarios where LSTM networks excel, explaining why they are suited in these contexts.
+
+\subsection{Natural Language Processing}
+
+(Approximately 0.5 pages, written by Leon)
+
+\subsection{Time Series Forecasting}
+
+(Approximately 0.5 pages, written by Fynn)
+
+\subsection{Music and Audio}
+
+(Approximately 0.5 pages, written by Fynn)
+
+\subsection{Medical}
+
+(Approximately 0.5 pages, written by Leon)
+
+\section{Limitations and Alternatives}
+
+Critically evaluates LSTM networks, outlining scenarios where other architectures might be better suited than LSTM networks.
+
+\subsection{Limitations}
+
+Discusses drawbacks including computational intensity, scalability concerns, and issues with gradient stability.
+(Approximately 0.5 pages, written by Fynn)
+
+\subsection{Variants}
+
+Examines notable variants discussing their respective enhancements and capabilities.
+(Approximately 1-1.5 pages, written by Leon/Fynn)
+
+\subsection{LSTM vs Transformers}
+
+Provides an analytical comparison between LSTM networks and Transformer architectures, evaluating strengths, weaknesses.
+(Approximately 1 page, written by Leon)
+
+\section{Conclusion}
+
+Summarizes the relevance of LSTM networks, reflecting on current applications and potential future directions.
+(Approximately 0.5 pages, written by Fynn)
+
+
+% \bibliographystyle{alpha}
+% \bibliography{abbrev,seminar_report}
+\end{document}
