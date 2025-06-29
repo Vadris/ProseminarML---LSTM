@@ -1,12 +1,3 @@
-% These are references to conference papers:
-
-@inproceedings{Deng09CVPR,
-  title={Image{N}et: A large-scale hierarchical image database},
-  author={Deng, Jia and Dong, Wei and Socher, Richard and Li, Li-Jia and Li, Kai and Fei-Fei, Li},
-  booktitle=CVPR,
-  year={2009},
-}
-
 @inproceedings{vaswani2017attention,
   title={Attention is all you need},
   author={Vaswani, Ashish and Shazeer, Noam and Parmar, Niki and Uszkoreit, Jakob and Jones, Llion and Gomez, Aidan N and Kaiser, {\L}ukasz and Polosukhin, Illia},
@@ -14,97 +5,283 @@
   year={2017}
 }
 
-% This is a reference to a journal paper:
-
-@article{hochreiter1997long,
+@article{hochreiter1997lstm,
   title={Long short-term memory},
   author={Hochreiter, Sepp and Schmidhuber, J{\"u}rgen},
   journal={Neural computation},
   year={1997},
   volume={9},
   number={8},
-  pages={1735--1780}
+  pages={1735–1780}
 }
 
-% This is a reference to a book:
-
-@book{Szeliski21,
-  title={Computer Vision: Algorithms and Applications},
-  author={Szeliski, Richard},
-  year={2021},
-  publisher={Springer},
-  edition={2nd}
+@misc{keras-lstm,
+    author={keras-team},
+    title={lstm.py},
+    howpublished={\url{https://github.com/keras-team/keras/blob/master/keras/src/layers/rnn/lstm.py}},
+    note={Accessed: June 2025},
+    year={2025}
 }
 
-% This is a reference to a paper on arXiv:
-
-@article{Kingma14Arxiv,
-  title={Adam: A method for stochastic optimization},
-  author={Kingma, Diederik P and Ba, Jimmy},
-  journal={arXiv:1412.6980},
-  year={2014}
+@misc{pytorch-rnn,
+    author={Sean Robertson},
+    title={NLP From Scratch: Classifying Names with a Character-Level RNN},
+    howpublished={\url{https://docs.pytorch.org/tutorials/intermediate/char_rnn_classification_tutorial.html}},
+    note={Accessed: June 2025},
+    year={2024}
+}
+@misc{pytorch-lstm,
+    author={noplaxochia},
+    title={LSTM from scratch},
+    howpublished={\url{https://medium.com/@wangdk93/lstm-from-scratch-c8b4baf06a8b}},
+    note={Accessed: June 2025},
+    year={2024}
 }
 
-% These are references to websites:
+@InProceedings{forget-gate,
+  author={Gers, F.A. and Schmidhuber, J. and Cummins, F.},
+  booktitle={1999 Ninth International Conference on Artificial Neural Networks ICANN 99. (Conf. Publ. No. 470)}, 
+  title={Learning to forget: continual prediction with LSTM}, 
+  year={1999},
+  volume={2},
+  number={},
+  pages={850-855 vol.2},
+  keywords={},
+  doi={10.1049/cp:19991218}}
 
-@misc{XKCDFileExtensions,
-  author={Munroe, Randall},
-  title={1301: File Extensions},
-  howpublished={\url{https://xkcd.com/1301/}},
-  note={Accessed: 2022-02-10}
+@article{training-graphs,
+author = {Ainsworth, Mark and Shin, Yeonjong},
+title = {Plateau Phenomenon in Gradient Descent Training of RELU Networks: Explanation, Quantification, and Avoidance},
+journal = {SIAM Journal on Scientific Computing},
+volume = {43},
+number = {5},
+pages = {A3438-A3468},
+year = {2021},
+doi = {10.1137/20M1353010},
+URL = { https://doi.org/10.1137/20M1353010},
+eprint = { https://doi.org/10.1137/20M1353010 }
 }
 
-@misc{GhoseGaussian,
-  author={Ghose, Kaushik},
-  title={Gaussian 2d},
-  howpublished={\url{https://de.m.wikipedia.org/wiki/Datei:Gaussian_2d.png}},
-  note={Accessed: 2022-03-22}
+@InProceedings{rizakisFPGAlstm,
+author="Rizakis, Michalis
+and Venieris, Stylianos I.
+and Kouris, Alexandros
+and Bouganis, Christos-Savvas",
+editor="Voros, Nikolaos
+and Huebner, Michael
+and Keramidas, Georgios
+and Goehringer, Diana
+and Antonopoulos, Christos
+and Diniz, Pedro C.",
+title="Approximate FPGA-Based LSTMs Under Computation Time Constraints",
+booktitle="Applied Reconfigurable Computing. Architectures, Tools, and Applications",
+year="2018",
+publisher="Springer International Publishing",
+address="Cham",
+pages="3--15",
+abstract="Recurrent Neural Networks, with the prominence of Long Short-Term Memory (LSTM) networks, have demonstrated state-of-the-art accuracy in several emerging Artificial Intelligence tasks. Nevertheless, the highest performing LSTM models are becoming increasingly demanding in terms of computational and memory load. At the same time, emerging latency-sensitive applications including mobile robots and autonomous vehicles often operate under stringent computation time constraints. In this paper, we address the challenge of deploying computationally demanding LSTMs at a constrained time budget by introducing an approximate computing scheme that combines iterative low-rank compression and pruning, along with a novel FPGA-based LSTM architecture. Combined in an end-to-end framework, the approximation method parameters are optimised and the architecture is configured to address the problem of high-performance LSTM execution in time-constrained applications. Quantitative evaluation on a real-life image captioning application indicates that the proposed system required up to 6.5{\$}{\$}{\backslash}times {\$}{\$}{\texttimes}less time to achieve the same application-level accuracy compared to a baseline method, while achieving an average of 25{\$}{\$}{\backslash}times {\$}{\$}{\texttimes}higher accuracy under the same computation time constraints.",
+isbn="978-3-319-78890-6"
 }
 
-@misc{Pgfplots,
-  author={Feuersänger, Christian},
-  title={PGFPlots Gallery},
-  howpublished={\url{https://texample.net/tikz/examples/all/}},
-  note={Accessed: 2023-10-27}
+@InProceedings{pascanu2013rnntraining,
+  title = 	 {On the difficulty of training recurrent neural networks},
+  author = 	 {Pascanu, Razvan and Mikolov, Tomas and Bengio, Yoshua},
+  booktitle = 	 {Proceedings of the 30th International Conference on Machine Learning},
+  pages = 	 {1310--1318},
+  year = 	 {2013},
+  editor = 	 {Dasgupta, Sanjoy and McAllester, David},
+  volume = 	 {28},
+  number =       {3},
+  series = 	 {Proceedings of Machine Learning Research},
+  address = 	 {Atlanta, Georgia, USA},
+  month = 	 {17--19 Jun},
+  publisher =    {PMLR},
+  pdf = 	 {http://proceedings.mlr.press/v28/pascanu13.pdf},
+  url = 	 {https://proceedings.mlr.press/v28/pascanu13.html},
+  abstract = 	 {There are two widely known issues with properly training recurrent neural networks, the vanishing and the exploding gradient problems detailed in Bengio et al. (1994). In this paper we attempt to improve the understanding of the underlying issues by exploring these problems from an analytical, a geometric and a dynamical systems perspective. Our analysis is used to justify a simple yet effective solution. We propose a gradient norm clipping strategy to deal with exploding gradients and a soft constraint for the vanishing gradients problem. We validate empirically our hypothesis and proposed solutions in the experimental section.  }
 }
 
-@misc{TikzExamples,
-  author={Various Authors},
-  title={TikZ and PGF examples},
-  howpublished={\url{http://pgfplots.sourceforge.net/gallery.html}},
-  note={Accessed: 2022-02-15}
+@InProceedings{zheng2018scalability,
+  author={Zhu, Hongyu and Akrout, Mohamed and Zheng, Bojian and Pelegris, Andrew and Jayarajan, Anand and Phanishayee, Amar and Schroeder, Bianca and Pekhimenko, Gennady},
+  booktitle={2018 IEEE International Symposium on Workload Characterization (IISWC)}, 
+  title={Benchmarking and Analyzing Deep Neural Network Training}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={88-100},
+  keywords={Training;Benchmark testing;Tools;Graphics processing units;Computational modeling;Speech recognition;Hardware},
+  doi={10.1109/IISWC.2018.8573476}}
+os Alamitos, CA, USA},
+month =Jun}
+
+@InProceedings {zheng2020scalability,
+author = { Zheng, Bojian and Vijaykumar, Nandita and Pekhimenko, Gennady },
+booktitle = { 2020 ACM/IEEE 47th Annual International Symposium on Computer Architecture (ISCA) },
+title = {{ Echo: Compiler-based GPU Memory Footprint Reduction for LSTM RNN Training }},
+year = {2020},
+volume = {},
+ISSN = {},
+pages = {1089-1102},
+abstract = { The Long-Short-Term-Memory Recurrent Neural Networks (LSTM RNNs) are a popular class of machine learning models for analyzing sequential data. Their training on modern GPUs, however, is limited by the GPU memory capacity. Our profiling results of the LSTM RNN-based Neural Machine Translation (NMT) model reveal that feature maps of the attention and RNN layers form the memory bottleneck, and runtime is unevenly distributed across different layers when training on GPUs. Based on these two observations, we propose to recompute the feature maps of the attention and RNN layers rather than stashing them persistently in the GPU memory. While the idea of feature map recomputation has been considered before, existing solutions fail to deliver satisfactory footprint reduction, as they do not address two key challenges. For each feature map recomputation to be efficient, its effect on (1) the total memory footprint, and (2) the total execution time has to be carefully estimated. To this end, we propose Echo, a new compiler-based optimization scheme that addresses the first challenge with a practical mechanism that estimates the memory benefits of recomputation over the entire computation graph, and the second challenge by non-conservatively estimating the recomputation runtime overhead leveraging layer specifics. Echo reduces the GPU memory footprint automatically and transparently without any changes required to the training source code, and is effective for models beyond LSTM RNNs. We evaluate Echo on numerous state-of-the-art machine learning workloads, including NMT, DeepSpeech2, Transformer, and ResNet, on real systems with modern GPUs and observe footprint reduction ratios of 1. 89x on average and 3. 13x maximum. Such reduction can be converted into faster training with a larger batch size, savings in GPU energy consumption (e.g., training with one GPU as fast as with four), and/or an increase in the maximum number of layers under the same GPU memory budget. Echo is open-sourced as a part of the MXNet 2.0 framework. 11https://issues.apache.org/jirdprojects/MXNET/issues/MXNET-1450 },
+keywords = {},
+doi = {10.1109/ISCA45697.2020.00092},
+url = {https://doi.ieeecomputersociety.org/10.1109/ISCA45697.2020.00092},
+publisher = {IEEE Computer Society},
+address = {Los Alamitos, CA, USA},
+month =Jun}
+
+@phdthesis{gradient-clipping,
+    author = "Tom\'{a}\v{s} Mikolov",
+    type = "Ph.D. thesis",
+    title = "STATISTICAL LANGUAGE MODELS BASED ON NEURAL NETWORKS",
+    school = "Brno University of Technology, Faculty of Information Technology",
+    year = 2012,
+    location = "Brno, CZ",
+    language = "english",
+    url = "https://www.fit.vut.cz/study/phd-thesis/283/"
 }
 
-% This is a reference to a manual:
-
-@manual{Booktabs,
-  author={Fear, Simon},
-  title={Publication quality tables in LATEX},
-  year={2020}
+@InProceedings{cahuantzi2023lstmvsgru,
+author="Cahuantzi, Roberto
+and Chen, Xinye
+and G{\"u}ttel, Stefan",
+editor="Arai, Kohei",
+title="A Comparison of LSTM and GRU Networks for Learning Symbolic Sequences",
+booktitle="Intelligent Computing",
+year="2023",
+publisher="Springer Nature Switzerland",
+address="Cham",
+pages="771--785",
+abstract="We explore the architecture of recurrent neural networks (RNNs) by studying the complexity of string sequences that it is able to memorize. Symbolic sequences of different complexity are generated to simulate RNN training and study parameter configurations with a view to the network's capability of learning and inference. We compare Long Short-Term Memory (LSTM) networks and gated recurrent units (GRUs). We find that an increase in RNN depth does not necessarily result in better memorization capability when the training time is constrained. Our results also indicate that the learning rate and the number of units per layer are among the most important hyper-parameters to be tuned. Generally, GRUs outperform LSTM networks on low-complexity sequences while on high-complexity sequences LSTMs perform better.",
+isbn="978-3-031-37963-5"
 }
 
-% These are references to newspaper articles:
-
-@article{Dempsey11Guttenberg,
-  author={Dempsey, Judy},
-  year={2011},
-  title={Plagiarism in Dissertation Costs German Defense Minister His Job},
-  journal={The New York Times},
-  note={Accessed: 2022-03-22}
+@article{bolboaca2023lstmperformance,
+author = {Bolboaca, Roland and Piroska, Haller},
+year = {2023},
+month = {03},
+pages = {1432},
+title = {Performance Analysis of Long Short-Term Memory Predictive Neural Networks on Time Series Data},
+volume = {11},
+journal = {Mathematics},
+doi = {10.3390/math11061432}
 }
 
-@article{Cottrell13Schavan,
-  author={Cottrell, Chris},
-  year={2013},
-  title={University Revokes German Official’s Doctorate},
-  journal={The New York Times},
-  note={Accessed: 2022-03-22}
+@InProceedings{gers2001timeseries,
+author="Gers, Felix A.
+and Eck, Douglas
+and Schmidhuber, J{\"u}rgen",
+editor="Tagliaferri, Roberto
+and Marinaro, Maria",
+title="Applying LSTM to Time Series Predictable Through Time-Window Approaches",
+booktitle="Neural Nets WIRN Vietri-01",
+year="2002",
+publisher="Springer London",
+address="London",
+pages="193--200",
+abstract="Long Short-Term Memory (LSTM) is able to solve many time series tasks unsolvable by feed-forward networks using fixed size time windows. Here we find that LSTM's superiority does not carry over to certain simpler time series prediction tasks solvable by time window approaches: the Mackey-Glass series and the Santa Fe FIR laser emission series (Set A). This suggests to use LSTM only when simpler traditional approaches fail.",
+isbn="978-1-4471-0219-9"
 }
 
-@article{AP21Giffey,
-  author={APnews},
-  year={2021},
-  title={German ex-minister, mayor contender stripped of doctorate},
-  journal={AP news},
-  note={Accessed: 2022-03-22}
+@InProceedings{eck2002musicgeneration,
+  author={Eck, D. and Schmidhuber, J.},
+  booktitle={Proceedings of the 12th IEEE Workshop on Neural Networks for Signal Processing}, 
+  title={Finding temporal structure in music: blues improvisation with LSTM recurrent networks}, 
+  year={2002},
+  volume={},
+  number={},
+  pages={747-756},
+  keywords={Intelligent networks;Multiple signal classification;Recurrent neural networks;Timing;Adaptive signal processing;Signal generators;Signal processing;Machine learning;Bars;Learning systems},
+  doi={10.1109/NNSP.2002.1030094}
+}
+
+@article{werb1990bptt,
+  author={Werbos, P.J.},
+  journal={Proceedings of the IEEE}, 
+  title={Backpropagation through time: what it does and how to do it}, 
+  year={1990},
+  volume={78},
+  number={10},
+  pages={1550-1560},
+  keywords={Backpropagation;Artificial neural networks;Supervised learning;Pattern recognition;Neural networks;Power system modeling;Equations;Control systems;Fluid dynamics;Books},
+  doi={10.1109/5.58337}}
+
+@article{torres2022elctricityforecasting,
+    author = {Torres, J.F. and Martínez-Álvárez, F. and Troncoso, A.},
+    title = {"A deep LSTM network for the Spanish electricity consumption forecasting"},
+    journal = {"Neural Computing and Applications "},
+    year = {2022},
+    volume = {34},
+    pages = {10533-10545}
+}
+
+@Article{nielsen2024electricitypriceforcasting,
+AUTHOR = {Kılıç, Deniz Kenan and Nielsen, Peter and Thibbotuwawa, Amila},
+TITLE = {Intraday Electricity Price Forecasting via LSTM and Trading Strategy for the Power Market: A Case Study of the West Denmark DK1 Grid Region},
+JOURNAL = {Energies},
+VOLUME = {17},
+YEAR = {2024},
+NUMBER = {12},
+ARTICLE-NUMBER = {2909},
+URL = {https://www.mdpi.com/1996-1073/17/12/2909},
+ISSN = {1996-1073},
+ABSTRACT = {For several stakeholders, including market players, customers, grid operators, policy-makers, investors, and energy efficiency initiatives, having a precise estimate of power pricing is crucial. It is easier for traders to plan, purchase, and sell power transactions with access to accurate electricity price forecasting (EPF). Although energy production and consumption topics are widely discussed in the literature, EPF and renewable energy trading studies receive less attention, especially for intraday market modeling and forecasting. Considering the rapid development of renewable energy sources, the article highlights the significance of integrating the deep learning model, long short-term memory (LSTM), with the proper trading strategy for short-term hourly renewable energy trading by utilizing two different spot markets. Day-ahead and intraday markets are taken into account for the West Denmark grid region (DK1). The time series analysis indicates that LSTM yields superior results compared to other benchmark machine learning algorithms. Using the predictions obtained by LSTM and the recommended trading strategy, promising profit values are achieved for the DK1 wind and solar energy use case, which ensures future motivation to develop a general and flexible model for global data.},
+DOI = {10.3390/en17122909}
+}
+
+@inproceedings{chang2018adamlstm,
+  author={Chang, Zihan and Zhang, Yang and Chen, Wenbo},
+  booktitle={2018 IEEE 9th International Conference on Software Engineering and Service Science (ICSESS)}, 
+  title={Effective Adam-Optimized LSTM Neural Network for Electricity Price Forecasting}, 
+  year={2018},
+  volume={},
+  number={},
+  pages={245-248},
+  keywords={Forecasting;Predictive models;Recurrent neural networks;Stochastic processes;Logic gates;Optimization;component;Electricity price;Adam;Long short-term memory},
+  doi={10.1109/ICSESS.2018.8663710}
+}
+
+@article{terven2025losses,
+    author = {Terven, Juan and Cordova-Esparza, Diana-Margarita and Romero-González, Julio-Alejandro and Ramírez-Pedraza, Alfonso and Chávez-Urbiola, E. A.},
+    title = {A comprehensive survey of loss functions and metrics in deep learning},
+    journal = {Artificial Intelligence Review},
+    year = {2025},
+ pages = {1573--7462}
+}
+
+@article{willmott2005losses,
+author = {Willmott, C. and Matsuura, K},
+year = {2005},
+month = {12},
+pages = {79},
+title = {Advantages of the Mean Absolute Error (MAE) over the Root Mean Square Error (RMSE) in Assessing Average Model Performance},
+volume = {30},
+journal = {Climate Research},
+doi = {10.3354/cr030079}
+}
+
+@article{harris1954languagestructure,
+author = {Zellig S. Harris},
+title = {Distributional Structure},
+journal = {WORD},
+volume = {10},
+number = {2-3},
+pages = {146-162},
+year = {1954},
+publisher = {Routledge},
+doi = {10.1080/00437956.1954.11659520},
+URL = { https://doi.org/10.1080/00437956.1954.11659520 },
+eprint = { https://doi.org/10.1080/00437956.1954.11659520}
+}
+
+@ARTICLE{gers2000lstmnlp,
+  author={Gers, F.A. and Schmidhuber, E.},
+  journal={IEEE Transactions on Neural Networks}, 
+  title={LSTM recurrent networks learn simple context-free and context-sensitive languages}, 
+  year={2001},
+  volume={12},
+  number={6},
+  pages={1333-1340},
+  keywords={Recurrent neural networks;Hidden Markov models;Delay effects;Backpropagation algorithms;Resonance light scattering;Learning automata;Neural networks;State-space methods;Bridges;Computational complexity},
+  doi={10.1109/72.963769}
 }
