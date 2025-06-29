@@ -394,9 +394,31 @@ Although LSTMs solve some of the problems associated with classical RNNs, they a
 
 \subsection{Variants}
 
-\subsubsection{LSTM with Forget Gate}
-
-\subsubsection{Coupled Input-Forget Gate}
+\subsubsection{LSTM with Forget Gate (Fynn)}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{Structure-of-LSTM-cell-which-introduces-three-special-gates-Input-Gate-i-Forget-Gate.png}
+    \caption{LSTM Cell with forget gate\\ Source: \cite{nguyen2022lstmforgetgraphic}}
+    \label{fig:lstm-forget}
+\end{figure}
+One of the first variations of Hochreiters and Schmidhubers architecture, was the introduction of a forget gate. The reason for its introduction, is that there is no way for the internal state of the cell to be reset in the original architecture. To fix this a forget gate can be introduced, which restricts how much of the previous state is kept in the next time step.\cite{gers1999forgetgate}
+Figure \ref{fig:lstm-forget} shows an LSTM cell, with the added forget gate on the left of the cell. Note that the input gate is labeled as update gate in this graphic.\\
+The forget gate is implemented like the other with\cite{gers1999forgetgate}
+\begin{equation}
+    net_\varphi(t)=\sum_uw_{\varphi\ u}y^u(t-1)
+    \label{eqn:forget-net-in}
+\end{equation}
+and
+\begin{equation}
+    y^\varphi(t)=f_\varphi\left(net_\varphi(t)\right)
+    \label{eqn:forget-actiavtions}
+\end{equation} 
+Equation \ref{eqn:forget-net-in} describes the net inputs for the forget gate, and equation \ref{eqn:forget-actiavtions} describes the activation for the forget gate. Using those a new equation for the cell state can be defined as\cite{gers1999forgetgate}
+\begin{equation}
+    s_c(t)=y^\varphi(t)s_c(t-1)+y^{in}(t)g\left(net_c(t)\right).    
+\end{equation}
+  This addition is very common, and many LSTM implementations in commonly used machine learning frameworks, include a forget gate.\cite{keras-lstm, pytorch-lstm}
+ \subsubsection{Coupled Input-Forget Gate}
 
 \subsubsection{Simplified LSTM}
 
@@ -420,13 +442,13 @@ Examines notable variants discussing their respective enhancements and capabilit
 \subsection{Natural Language Processing}
 
 \subsection{Time Series Forecasting (Fynn)}
-While LSTMs can be used to forecast timeseries, they often are inferior to other methods.\cite{gers2001timeseries}. But for certain applications, like speech or music, they are a better choice, as they perform better on more complex sequences.\cite{gers2001timeseries, cahuantzi2023lstmvsgru}\\
+While LSTMs can be used to forecast timeseries, they often are inferior to other methods.\cite{gers2001timeseries} But for certain applications, like speech or music, they are a better choice, as they perform better on more complex sequences.\cite{gers2001timeseries, cahuantzi2023lstmvsgru}\\
 In a 2022 article by Torres, they use an Deep LSTM Network, to predict electricity demands, and archive errors of just \begin{math}1.5\%\end{math}.\cite{torres2022elctricityforecasting}\\
 Kılıç et al. (2024) uses the LSTM Architecture, to predict electricity prices, and archieve better results compared to other architectures.\cite{nielsen2024electricitypriceforcasting}
 
-\subsection{Music and Audio}
-As mentioned in the introduction, music has structures and patterns, where the next note or chord, depends on the previous ones. LSTMs can learn those patterns and predict what comes next, which allows them to generate music.\cite{eck2002musicgeneration}
-In their 2002 paper Eck and Schmidhuber 
+\subsection{Music and Audio (Fynn)}
+As mentioned in the introduction, music has structures and patterns, where the next note or chord, depends on the previous ones. LSTMs can learn those patterns and predict what comes next, which allows them to generate music.\cite{eck2002musicgeneration}\\
+In their 2002 paper Eck and Schmidhuber use an LSTM network to generate chord progressions, as well as melodies and chord progression. Their network successfully managed to pick up on patterns in a style of music, and reproduce those patterns to compose new music in they same style.\cite{eck2002musicgeneration}  
 \subsection{Medical}
 
 \section{Conclusion}
