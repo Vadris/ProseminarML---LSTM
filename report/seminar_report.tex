@@ -169,7 +169,7 @@ net_{in}(t)=\sum_{u}{w_{in\ u}}y^u(t-1).
 \end{equation}
 The values of the summation index \begin{math}u\end{math} represent the different inputs and depend on the chosen network architecture. These values can represent input units, memory cells, gate units, or hidden units from this or other cells.
 The function \begin{math}g\end{math} is used to scale the cell net input before gating, and the function \begin{math}h\end{math} is used to scale the memory cell output before gating.
-Note that multiplying two vectors together does not give the dot product, but rather the Hadamard product, which multiplies vectors component-wise. This allows each component of the vector to be gated individually.
+Note that multiplying two vectors together does not give the dot product, but rather the Hadamard product, which multiplies vectors component-wise.\cite{gokmen2018hadamard} This allows each component of the vector to be gated individually.
 An index \begin{math}j\end{math} can be added to identify individual cells. This has been omitted here to make the notation easier to read.\cite{hochreiter1997lstm}
 
 \subsection{Example Implementation (Fynn)}
