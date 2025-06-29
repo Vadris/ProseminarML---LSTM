@@ -87,7 +87,7 @@
 \newpage
 % =========================================================================
 
-\section{Introduction}
+\section{Introduction (Fynn)}
 Much of the data we encounter in the real world, such as natural language, speech, music and weather, is best described as a sequence of individual data points that must be interpreted in context to extract meaningful information, such as patterns.\\
 For instance, individual words do not carry much information and can have multiple meanings depending on the context; however, if multiple words are arranged in a specific order, they can convey complex ideas. Additionally, the order of the words cannot be completely random; it must follow a specific structure to form a proper sentence. This means that, for tasks such as translation, it is important to take the entire context into account in order to properly interpret the meaning of individual words.\cite{harris1954languagestructure}\\
 Similarly, most forms of music contain structures and patterns, such as rhythms, chord progressions or melodic motives, which convey meaning; individual notes or transients, on the other hand, convey very little information on their own. Therefore, when writing chord progressions, for example, it is important to consider all previous chords when selecting a chord, as the context will change its sound and meaning.\cite{eck2002musicgeneration}\\
@@ -107,7 +107,7 @@ Since then, LSTM networks have played a significant role in the development of m
 \subsection{Limitations of Recurrent Neural Networks}
 
 \section{LSTM Architecture}
-\subsection{Principle of Operation}
+\subsection{Principle of Operation (Fynn)}
 \subsubsection{Intuitive Explanation}
 The main goal of the LSTM architecture is to eliminate the problem of vanishing gradients. This can be achieved by ensuring a constant error flow through the network. However, when this approach is implemented naively using only a linear activation function (e.g. \begin{math}f(x)=x,\forall x\end{math}) and a weight matrix with ones on its diagonal (\begin{math}w_{jj}=1,\forall j\end{math}), problems can arise. For the inputs, a single weight can be responsible for both storing and ignoring inputs, and for the outputs, a single weight can be responsible for both allowing and preventing the distribution of a unit's memory. During training, this can result in contradictory weight update signals, affecting the network's performance. \cite{hochreiter1997lstm}\\
 The solution proposed by Hochreiter and Schmidhuber introduces so-called 'gate units' at the input and output of the constant error flow to control the storage and retrieval of memory through context. This results in a structure they refer to as a 'memory cell' (often just 'cell'), as shown in Figure \ref{fig:lstm-cell}.\cite{hochreiter1997lstm}.
@@ -172,7 +172,7 @@ The function \begin{math}g\end{math} is used to scale the cell net input before 
 Note that multiplying two vectors together does not give the dot product, but rather the Hadamard product, which multiplies vectors component-wise. This allows each component of the vector to be gated individually.
 An index \begin{math}j\end{math} can be added to identify individual cells. This has been omitted here to make the notation easier to read.\cite{hochreiter1997lstm}
 
-\subsection{Example Implementation}
+\subsection{Example Implementation (Fynn)}
 \subsubsection{Network Architecture}
 Before implementing a simple LSTM network, the network architecture must first be defined.
 For simplicity, the activations for the cell, input gate and output gate will be the output activations, as well as the activations of the input units:   \begin{math}u\in\{c, x, b \}\end{math}, where \begin{math}y^c(t)\end{math} are the output activations at time \begin{math}t\end{math}, \begin{math}y^x(t-1)=x(t)\end{math} are the activations of the input units at time \begin{math}t\end{math} and \begin{math}y^b(t-1)=b\end{math} are the bias units.\\\cite{hochreiter1997lstm} 
@@ -382,7 +382,7 @@ As the input is a repeating sequence of values, the implementation could be impr
 Another way to get a better performance would be to use a Gated recurrent unit (GRU) instead of an LSTM, as GRUs often perform better with short sequences.\cite{cahuantzi2023lstmvsgru}
 \section{Limitations and Alternatives}
 
-\subsection{Limitations}
+\subsection{Limitations (Fynn)}
 Although LSTMs solve some of the problems associated with classical RNNs, they also have some disadvantages, including:
 \begin{itemize}
     \item \textbf{Computational Intensity:} Computational intensity: As an LSTM cell requires additional weights for the gates, the number of weights can increase by up to a factor of \begin{math} 9 \end{math}. However, this is usually not a significant issue, as LSTM networks typically have a similar number of weights to other RNNs.\cite{hochreiter1997lstm}\\ However, in applications that require low power, such as mobile devices, this could cause problems. \cite{rizakisFPGAlstm}
@@ -417,19 +417,16 @@ Examines notable variants discussing their respective enhancements and capabilit
 
 \section{Applications}
 
-Demonstrates real-world scenarios where LSTM networks excel, explaining why they are suited in these contexts.
-
 \subsection{Natural Language Processing}
 
-\subsection{Time Series Forecasting}
+\subsection{Time Series Forecasting (Fynn)}
 While LSTMs can be used to forecast timeseries, they often are inferior to other methods.\cite{gers2001timeseries}. But for certain applications, like speech or music, they are a better choice, as they perform better on more complex sequences.\cite{gers2001timeseries, cahuantzi2023lstmvsgru}\\
 In a 2022 article by Torres, they use an Deep LSTM Network, to predict electricity demands, and archive errors of just \begin{math}1.5\%\end{math}.\cite{torres2022elctricityforecasting}\\
 Kılıç et al. (2024) uses the LSTM Architecture, to predict electricity prices, and archieve better results compared to other architectures.\cite{nielsen2024electricitypriceforcasting}
 
 \subsection{Music and Audio}
-As mentioned in the introduction, music has structures and patterns, where the next note or chord, depends on the previous ones. T
-(Approximately 0.5 pages, written by Fynn)
-
+As mentioned in the introduction, music has structures and patterns, where the next note or chord, depends on the previous ones. LSTMs can learn those patterns and predict what comes next, which allows them to generate music.\cite{eck2002musicgeneration}
+In their 2002 paper Eck and Schmidhuber 
 \subsection{Medical}
 
 \section{Conclusion}
