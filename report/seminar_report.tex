@@ -68,6 +68,19 @@
 \pgfplotsset{compat=newest}
 
 
+\tikzset{basic/.style={draw,fill=none,
+                       text badly centered,minimum width=3em}}
+\tikzset{input/.style={basic,circle,minimum width=3.5em}}
+\tikzset{weights/.style={basic,rectangle,minimum width=2em}}
+\tikzset{functions/.style={basic,circle, minimum width=3em}}
+\newcommand{\addaxes}{\draw (0em,1em) -- (0em,-1em)
+                            (-1em,0em) -- (1em,0em);}
+\newcommand{\relu}{\draw[line width=1.5pt] (-1em,0) -- (0,0)
+                                (0,0) -- (0.75em,0.75em);}
+\newcommand{\stepfunc}{\draw[line width=1.5pt] (0.65em,0.65em) -- (0,0.65em) 
+                                    -- (0,-0.65em) -- (-0.65em,-0.65em);}
+
+
 % =========================================================================
 
 \graphicspath{{pictures/}}
@@ -100,11 +113,264 @@ Since then, LSTM networks have played a significant role in the development of m
 
 \section{Foundational Concepts}
 
+Long Short-Term Memory models are a variant of Recurrent Neural Networks which is a type of Neural Network.
+Neural Networks are the basis upon those architectures are build. This section aims to
+provide a complete but rather shallow introduction into the foundations of neural networks.
+
 \subsection{Neural Networks and Training}
+
+Neural networks are mostly build upon the Perceptron which can be thought of as the digital equivalent of a biological Neuron.
+On a high level the Perceptron has a some number of numerical inputs and computes a singular output value based on that \cite{Rosenblatt58}.
+
+A Perceptron is defined by its weights $w_i$, bias $b$ and the choice of the activation function $\phi$.
+The bias is required so the Perceptron can output $y \neq 0$ when all $x_i = 0$.
+Now having $n$ input values $x_0, x_1, ..., x_{n-1}, x_n$ the output of the perceptron can by computed like this:
+
+$$
+y=\phi\bigl(\sum_{i=0}^{n}w_i x_i + b\bigr)
+$$
+
+
+\begin{center}
+\begin{tikzpicture}
+    % Draw input nodes
+    \foreach \h [count=\hi ] in {$x_2$,$x_1$,$x_0=1$}{%
+          \node[input] (f\hi) at (0,\hi*1.25cm-1.5 cm) {\h};
+        }
+    % Dot dot dot ... x_n
+    \node[below=0.62cm] (idots) at (f1) {\vdots};
+    \node[input, below=0.62cm] (last_input) at (idots) {$x_n$};
+    % Draw summation node
+    \node[functions] (sum) at (4,0) {\Huge$\sum$};
+    \node[below=0.69cm] at (sum) {$\sum_{i=0}^n w_ix_i$};
+    % Draw edges from input nodes to summation node
+    \foreach \h [count=\hi ] in {$w_2$,$w_1$,$w_0$}{%
+          \path (f\hi) -- node[weights] (w\hi) {\h} (sum);
+          \draw[->] (f\hi) -- (w\hi);
+          \draw[->] (w\hi) -- (sum);
+        }
+    % Dot dot dot ... w_n
+    \node[below=0.05cm] (wdots) at (w1) {\vdots};
+    \node[weights, below=0.45cm] (last_weight) at (wdots) {$w_n$};
+    % Add edges for last node and last weight etc
+    \path[draw,->] (last_input) -- (last_weight);
+    \path[draw,->] (last_weight) -- (sum);
+    % Draw node for activation function
+    \node[functions] (activation) at (7,0) {};
+    % Place activation function in its node
+    \begin{scope}[xshift=7cm]
+        \addaxes
+        % flexible selection of activation function
+        \relu
+        % \stepfunc
+    \end{scope}
+    % Connect sum to relu
+    \draw[->] (sum) -- (activation);
+    \draw[->] (activation) -- ++(1,0);
+    % Labels
+    \node[above=1cm]  at (f3) {inputs};
+    \node[above=1cm] at (w3) {weights};
+    \node[above=1cm] at (activation) {activation function};
+\end{tikzpicture}
+
+\captionof{figure}{A single Perceptron}
+
+\end{center}
+
+A single basic Perceptron on its own is not particularly useful as
+it only models linear decision boundaries and cannot learn the xor function \cite{MinskyPapert69}.
+
+First we stack multiple Perceptrons to construct a layer. A layer has multiple
+Perceptrons which calculate their output value with their own weights and biases on the same input values, which results
+in as many output values as there are Perceptrons in the layer. Now one can construct a network which chains
+multiple layers after each other, which results in a multilayer Perceptron (MLP), which is also known as a fully connected
+feed forward network, as each layer is fully connected to the next layer in that each perceptron in layer $i$ 
+is connected to each perceptron in layer $i+1$. The information strictly flows from input layer, through
+intermediate hidden layers to the output layer, without any loops.
+Mathematically a feed forward neural network, with $L$ layers and $0 < l \leq L$ can be described by
+
+$$\mathbf{y}^{(l)} = \phi^{(l)}(\mathbf{W}^{(l)}\mathbf{y}^{(l-1)}+\mathbf{b}^{(l)})$$
+
+where $\mathbf{W}^{(l)}$ represents the weight matrix of layer $l$, $\mathbf{b}^{(l)}$ the bias vector of layer $l$,
+$\mathbf{y}^{(l-1)}$ the output vector of the previous layer or in case of $l=1$ the input vector
+and $\phi^{(l)}$ is the activation function applied element-wise. \\
+
+% TODO: is the above l=1 right?
+
+Now the choice of the activation function is very important, when using a multilayer Perceptron as when a linear activation function like the 
+identity function is used for every Percetpron the entire network can be described in a single layer. Therefore
+a non-linear activation function should be used to make the network capable of learning non-linear
+decision boundaries. When choosing an activation function there are some important
+properties which should be respected while making such a choice. The activation function should be fully differentiable, which makes
+computing the gradient easier, but is not required in all cases as workarounds can be made e.g. ReLU. It should also be computationally
+cheap as its being run many times during a forward pass. \\
+
+% TODO: some example / commonly used funcs
+
+With loss functions the performance of a neural network on a given input can be computed by comparing the desired output with the 
+predicted output of the model. Using loss functions we can quantify the error in the prediction of the neural network, which 
+is a metric we can optimize for. There are again many options for choosing a loss function but it heavily depends on the nature of the
+problem you're trying to solve by using a model: either classification or regression. A common loss function to use when trying to optimize 
+regression tasks is the Mean Squared Error (MSE):
+
+$$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = \frac{1}{n}\sum^n_{i=1}{(y_i-\hat{y}_i)^2}$$
+
+where $\mathbf{y}$ is the prediction of the model and $\mathbf{\hat{y}}$ the ground truth. When solving classification tasks the Cross Entropy Loss function is often used:
+
+
+$$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = -\sum^n_{i=1}{y_i\log(\hat{y}_i)}$$
+
+With loss functions we have a metric to optimize against, which can be used in an optimization algorithm called 
+gradient decent. It will minimize the loss function by iteratively computing the error gradient and updating
+the weights in the opposite direction of the gradient of the loss function. This is the update rule according
+to gradient decent:
+
+$$ \theta \leftarrow \theta - \eta \nabla_{\theta}\mathcal{L}(\theta)$$
+
+Here, $\theta$ represents the parameters, $\eta$ the learning rate that determines the size of the step we take in 
+the opposite direction of the gradient and $\nabla_{\theta}\mathcal{L}(\theta)$ denotes the gradient 
+of the loss function with respect to parameters $\theta$. To compute the entire gradient, all the errors for the 
+entire dataset would need to be averaged for the most accurate estimation of the gradient. Therefore variants 
+like stochastic gradient decent exist, that first randomizes the order of dataset, second organizes it into batches of
+the same size. Now we only average the gradient for all samples inside the batch and make an update to the model parameters \cite{Bottou10}.
+
+
+To actually calculating the gradient the backpropagation algorithm is used. First we take out input data and do the
+forward pass to compute the predictions. We can then calculate the loss by comparing the prediction to the desired result.
+Now the idea behind backpropagation is to calculate the influence of the change weights and biases to the change in loss \cite{Rumelhart86}.
+Mathematically this is represented by:
+
+
+$$
+\frac{\partial \mathcal{L}}{\partial \mathbf{W}^{(l)}} = \frac{\partial \mathcal{L}}{\partial \mathbf{y}^{(l)}} \frac{\partial \mathbf{y}^{(l)}}{\partial \mathbf{W}^{(l)}}
+$$
+
+
+where $\mathcal{L}$ denotes the loss, $\mathbf{W}^{(l)}$ represents the weight matrix at layer $l$ and $\mathbf{y}^{(l)}$ stands for the output matrix
+for layer $l$. Now this can be calculated at the output layer $L$ to get the error signal for the layer $L-1$. 
+Then the same computation can be applied to the layer $L-1$ to propagate the error back.
 
 \subsection{Recurrent Neural Networks}
 
+Classic feed forward neural networks are only able to handle fix sized data, because the size of the input layer
+is fixed. Sequences of variable length, like timeseries, audio or language data require a different
+architecture to still being able to compute the gradients properly. This can be achieved by recurrent
+neural networks (RNNs). Recurrent neural networks accomplish that by carrying a hidden state across timesteps.
+
+\begin{center}
+  \begin{tikzpicture}[>=latex,
+    % styles for clarity
+    input/.style   ={draw, circle, minimum size=8mm},
+    hidden/.style  ={draw, rectangle, rounded corners=2pt, minimum size=8mm},
+    output/.style  ={draw, circle, minimum size=8mm},
+    node distance = 2cm
+  ]
+    \node[input](x) at (0,0){x};
+    \node[hidden](h) at (2,0) {h};
+    \node[output](o) at (4, 0) {o};
+
+    \draw[->] (x) -- node[above]{$W_h$} (h);
+    \draw[->] (h) -- node[above]{$W_y$} (o);
+    \path
+      (h) edge[->,
+            out=-30,
+            in=-150,
+            looseness=7,
+            loop]
+            node[below]{$U_h$}
+      (h);
+  \end{tikzpicture}
+\end{center}
+
+The RNN Cell is very similar to the Perceptron. It still has weights, biases and an activation function. Additionally 
+it has a recurrent connection to itself: the output of a rnn cell at timestep $t$ is feed back to itself at timestep
+$t+1$ multiplied by its own weight. That output value is called the hidden state $h_t$ of an rnn cell.
+A Elman RNN is described by the forward state update and output projection \cite{Elman90}:
+
+$$
+h_t = \phi\!\bigl(W_h x_t + U_h h_{t-1} + b_h\bigr), \quad
+y_t = \psi\!\bigl(W_y h_t + b_y\bigr).
+$$
+which can be understood as a neural network with fully connected input and output layers together with a hidden rnn layer.
+The forward state update projection $h_t$ is similar to the perceptron where $b_h$ represents the bias, $W_h$ the weights,
+with the addition of the term $U_hh_{t-1}$. $h_{t-1}$ is the hidden state of the last iteration and $U_h$ is the weight
+matrix for the hidden state. Typically that output is then feed though a fully connected output layer map the
+potentially high dimensional hidden state into the output space.\\
+
+
+To calculate the gradient in a network with recurrent connections you need to unroll the network in time. The network
+is unrolled over a sequence of length $T$, by creating $T$ copies of the same cell. All copies share the same weights.
+The recurrent connections are now longer connected to themselves but their copy in the next copy. Unrolling converts 
+the cyclic graph of a RNN into an acyclic graph, which is required for applying the standard backpropagation algorithm.
+Figure~\ref{fig:rnn_unroll} depicts the unrolled network for $T=3$.
+
+\begin{center}
+  \begin{tikzpicture}[>=latex,
+      % styles for clarity
+      input/.style   ={draw, circle, minimum size=8mm},
+      hidden/.style  ={draw, rectangle, rounded corners=2pt, minimum size=8mm},
+      output/.style  ={draw, circle, minimum size=8mm},
+      node distance = 2cm
+    ]
+    \foreach \t [count=\i from 1] in {0,1,2}{
+      % place nodes at (0,-2*\i), (2,-2*\i), (4,-2*\i)
+      \node[input]  (x\i) at (0,-2*\i) {$x_{\t}$};
+      \node[hidden] (h\i) at (2,-2*\i) {$h_{\t}$};
+      \node[output] (o\i) at (4,-2*\i) {$o_{\t}$};
+
+      % input → hidden and hidden → output
+      \draw[->] (x\i) -- node[above] {$W_h$} (h\i);
+      \draw[->] (h\i) -- node[above] {$W_y$} (o\i);
+
+      % hidden_{t–1} → hidden_t for t>0
+      \ifnum\i>1
+        \pgfmathtruncatemacro{\j}{\i-1}
+        \draw[->, out=-20, in=160, looseness=1.5]
+          (h\j) to node[below] {$U_h$} (h\i);
+      \fi
+    }
+  \end{tikzpicture}
+  \captionof{figure}{Unrolled Elman RNN for $T=3$.}\label{fig:rnn_unroll}
+\end{center}
+
+
+
+
+Applying backpropagation on an unrolled graph is called backpropagation through time (BPTT). On the acyclic graph 
+the standard backpropagation algorithm can be applied, but the weights for all instances of the recurrent neural network
+in the unrolled graph are shared. The final update for the parameter matrices are accumulated though time steps, so there 
+is a contribution from everywhere a weight is used \cite{werb1990bptt}.
+
+
 \subsection{Limitations of Recurrent Neural Networks}
+
+Classic recurrent neural networks suffer from some limitations, which motivated the development 
+of other RNN Variants notably LSTM networks.
+
+\begin{enumerate}[label=(\roman*)]
+\item \textbf{Vanishing and exploding gradients.}  During BPTT the gradient with respect to earlier timesteps involves products of Jacobian
+  matrices $\partial h_t/\partial h_{t-1}$.  For many activation functions this product tends to shrink or blow up exponentially with
+  the number of timesteps, causing the gradient norm to \emph{vanish} or \emph{explode}.
+  As a consequence the network either fails to learn long‑range dependencies or becomes numerically unstable~\cite{hochreiter1997lstm,pascanu2013rnntraining}.
+  Exploding gradients can be taken care of by clipping the gradient to a maximum value \cite{pascanu2013rnntraining}.
+  Vanish gradients though cannot be mitigated this easily. The vanishing gradients problem is the main motivation behind the
+  development of LSTM networks.
+\item \textbf{Limited memory capacity.}  The entire past of the sequence must be compressed into a single hidden vector $h_t$.
+  In practice the dimensionality of $h_t$ is bounded by computational constraints, creating a tight information bottleneck.
+  Empirical analyses show that standard RNNs spontaneously forget information that is not constantly reinforced.
+\item \textbf{Difficulty modelling very long sequences.}  Even when exploding gradients are clipped and vanishing 
+  gradients mitigated, the truncation window in BPTT means the effective context length is often limited to a few hundred
+  timesteps.  Tasks such as document‑level language modelling require mechanisms that can propagate information across thousands of steps \cite{pascanu2013rnntraining}.
+\item \textbf{Bias towards recent inputs.}  The recurrent update $h_t=\phi(W_h x_t + U_h h_{t-1})$ blends the new input with a 
+  transformed version of the previous hidden state.  Without gating, this blend is rigid and the network cannot dynamically decide 
+  to \emph{copy} or \emph{forget} information.  As a result, RNNs tend to over‑weight recent inputs and under‑weight older ones.
+\end{enumerate}
+
+\section{Related Work}
+
+% TODO:
+Presents historical context, foundational studies, and key developments leading up to Hochreiter and Schmidhuber's 1997 paper.
+(Approximately 1 page, written by Leon)
 
 \section{LSTM Architecture}
 \subsection{Principle of Operation (Fynn)}
@@ -172,7 +438,7 @@ The function \begin{math}g\end{math} is used to scale the cell net input before 
 Note that multiplying two vectors together does not give the dot product, but rather the Hadamard product, which multiplies vectors component-wise.\cite{gokmen2018hadamard} This allows each component of the vector to be gated individually.
 An index \begin{math}j\end{math} can be added to identify individual cells. This has been omitted here to make the notation easier to read.\cite{hochreiter1997lstm}
 
-\subsection{Example Implementation (Fynn)}
+
 \subsubsection{Network Architecture}
 Before implementing a simple LSTM network, the network architecture must first be defined.
 For simplicity, the activations for the cell, input gate and output gate will be the output activations, as well as the activations of the input units:   \begin{math}u\in\{c, x, b \}\end{math}, where \begin{math}y^c(t)\end{math} are the output activations at time \begin{math}t\end{math}, \begin{math}y^x(t-1)=x(t)\end{math} are the activations of the input units at time \begin{math}t\end{math} and \begin{math}y^b(t-1)=b\end{math} are the bias units.\cite{hochreiter1997lstm}\\ 
@@ -432,6 +698,7 @@ Equation \ref{eqn:forget-net-in} describes the net inputs for the forget gate, a
 
 Examines notable variants discussing their respective enhancements and capabilities.
 (Approximately 1-1.5 pages, written by Leon/Fynn)
+% TODO:
 
 \subsection{LSTM vs GRU}
 
@@ -440,6 +707,16 @@ Examines notable variants discussing their respective enhancements and capabilit
 \section{Applications}
 
 \subsection{Natural Language Processing}
+
+We have already established that LSTM networks are great at working with sequence data. One example where LSTM networks
+have been successfully used is speech recognition. The LSTM network learns temporal patterns in audio and captures long 
+term relationships. They have achieved state of the art results in a paper by Google in 2014 \cite{sak2014longshorttermmemorybased}.
+Researchers at google showed that a deep LSTM network outperformed traditional deep neural networks for this problem.
+It was even better then a feed forward neural network with 10x more parameters \cite[1]{sak2014longshorttermmemorybased}.
+They used an LSTM variant called Long Short-Term Memory Projected (LSTMP) architecture \cite[2]{sak2014longshorttermmemorybased} which 
+outperformed the traditional LSTM architecture. The LSTMP architecture differs from the traditional LSTM one by not having a LSTM layer
+which output is directly connected to its input but they first do a linear projection with a fully connected layer and its output will represent the 
+hidden state of the cell.
 
 \subsection{Time Series Forecasting (Fynn)}
 While LSTMs can be used to forecast time series, they often are inferior to other methods.\cite{gers2001timeseries} But for certain applications, like speech or music, they are a better choice, as they perform better on more complex sequences.\cite{gers2001timeseries, cahuantzi2023lstmvsgru}\\
@@ -455,6 +732,7 @@ In their 2002 paper Eck and Schmidhuber use an LSTM network to generate chord pr
 
 Summarizes the relevance of LSTM networks, reflecting on current applications and potential future directions.
 (Approximately 0.5 pages, written by Fynn)
+% TODO:
 
 \bibliographystyle{alpha}
 \bibliography{abbrev,seminar_report}
