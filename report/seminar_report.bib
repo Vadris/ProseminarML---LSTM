@@ -100,8 +100,6 @@ isbn="978-3-319-78890-6"
   pages={88-100},
   keywords={Training;Benchmark testing;Tools;Graphics processing units;Computational modeling;Speech recognition;Hardware},
   doi={10.1109/IISWC.2018.8573476}}
-os Alamitos, CA, USA},
-month =Jun}
 
 @InProceedings {zheng2020scalability,
 author = { Zheng, Bojian and Vijaykumar, Nandita and Pekhimenko, Gennady },
@@ -390,21 +388,16 @@ ABSTRACT={In our previous work we have shown that resistive cross point devices,
   keywords={Recurrent neural networks;Artificial neural networks;Training data;Databases;Probability;Shape;Parameter estimation;Speech recognition;Control systems;Telecommunication control},
   doi={10.1109/78.650093}}
 
-% article{Graves05,
-% title = {Framewise phoneme classification with bidirectional LSTM and other neural network architectures},
-% journal = {Neural Networks},
-% volume = {18},
-% number = {5},
-% pages = {602-610},
-% year = {2005},
-% note = {IJCNN 2005},
-% issn = {0893-6080},
-% doi = {https://doi.org/10.1016/j.neunet.2005.06.042},
-% url = {https://www.sciencedirect.com/science/article/pii/S0893608005001206},
-% author = {Alex Graves and Jürgen Schmidhuber},
-% abstract = {In this paper, we present bidirectional Long Short Term Memory (LSTM) networks, and a modified, full gradient version of the LSTM learning algorithm. We evaluate Bidirectional LSTM (BLSTM) and several other network architectures on the benchmark task of framewise phoneme classification, using the TIMIT database. Our main findings are that bidirectional networks outperform unidirectional ones, and Long Short Term Memory (LSTM) is much faster and also more accurate than both standard Recurrent Neural Nets (RNNs) and time-windowed Multilayer Perceptrons (MLPs). Our results support the view that contextual information is crucial to speech processing, and suggest that BLSTM is an effective architecture with which to exploit it.11An abbreviated version of some portions of this article appeared in (Graves and Schmidhuber, 2005), as part of the IJCNN 2005 conference proceedings, published under the IEEE copyright.}
-% }
 
+@misc{huang2015bidirectionallstmcrfmodelssequence,
+      title={Bidirectional LSTM-CRF Models for Sequence Tagging}, 
+      author={Zhiheng Huang and Wei Xu and Kai Yu},
+      year={2015},
+      eprint={1508.01991},
+      archivePrefix={arXiv},
+      primaryClass={cs.CL},
+      url={https://arxiv.org/abs/1508.01991}, 
+}
 
 @INPROCEEDINGS{Graves05,
   author={Graves, A. and Schmidhuber, J.},
@@ -412,10 +405,71 @@ ABSTRACT={In our previous work we have shown that resistive cross point devices,
   title={Framewise phoneme classification with bidirectional LSTM networks}, 
   year={2005},
   volume={4},
-  number={},
   pages={2047-2052 vol. 4},
   keywords={Speech recognition;Recurrent neural networks;Electronic mail;Databases;Acoustic measurements;Neural networks;Hidden Markov models;Memory architecture;Error correction;Data analysis},
   doi={10.1109/IJCNN.2005.1556215}}
+
+@misc{graves2013speechrecognitiondeeprecurrent,
+      title={Speech Recognition with Deep Recurrent Neural Networks},
+      author={Alex Graves and Abdel-rahman Mohamed and Geoffrey Hinton},
+      year={2013},
+      eprint={1303.5778},
+      archivePrefix={arXiv},
+      primaryClass={cs.NE},
+      url={https://arxiv.org/abs/1303.5778}
+}
+
+@InProceedings{Graves04,
+author={Graves, Alex
+and Eck, Douglas
+and Beringer, Nicole
+and Schmidhuber, Juergen},
+editor={Ijspeert, Auke Jan
+and Murata, Masayuki
+and Wakamiya, Naoki},
+title={Biologically Plausible Speech Recognition with LSTM Neural Nets},
+booktitle={Biologically Inspired Approaches to Advanced Information Technology},
+year={2004},
+publisher={Springer Berlin Heidelberg},
+address={Berlin, Heidelberg},
+pages={127--136},
+abstract={Long Short-Term Memory (LSTM) recurrent neural networks (RNNs) are local in space and time and closely related to a biological model of memory in the prefrontal cortex. Not only are they more biologically plausible than previous artificial RNNs, they also outperformed them on many artificially generated sequential processing tasks. This encouraged us to apply LSTM to more realistic problems, such as the recognition of spoken digits. Without any modification of the underlying algorithm, we achieved results comparable to state-of-the-art Hidden Markov Model (HMM) based recognisers on both the TIDIGITS and TI46 speech corpora. We conclude that LSTM should be further investigated as a biologically plausible basis for a bottom-up, neural net-based approach to speech recognition.},
+isbn={978-3-540-27835-1}
+}
+
+
+@article{Hornik89,
+title = {Multilayer feedforward networks are universal approximators},
+journal = {Neural Networks},
+volume = {2},
+number = {5},
+pages = {359-366},
+year = {1989},
+issn = {0893-6080},
+doi = {https://doi.org/10.1016/0893-6080(89)90020-8},
+url = {https://www.sciencedirect.com/science/article/pii/0893608089900208},
+author = {Kurt Hornik and Maxwell Stinchcombe and Halbert White},
+keywords = {Feedforward networks, Universal approximation, Mapping networks, Network representation capability, Stone-Weierstrass Theorem, Squashing functions, Sigma-Pi networks, Back-propagation networks},
+abstract = {This paper rigorously establishes that standard multilayer feedforward networks with as few as one hidden layer using arbitrary squashing functions are capable of approximating any Borel measurable function from one finite dimensional space to another to any desired degree of accuracy, provided sufficiently many hidden units are available. In this sense, multilayer feedforward networks are a class of universal approximators.}
+}
+
+@book{Goodfellow16,
+    title={Deep Learning},
+    author={Ian Goodfellow and Yoshua Bengio and Aaron Courville},
+    publisher={MIT Press},
+    note={\url{http://www.deeplearningbook.org}},
+    year={2016}
+}
+
+@misc{katharopoulos2020transformersrnnsfastautoregressive,
+      title={Transformers are RNNs: Fast Autoregressive Transformers with Linear Attention}, 
+      author={Angelos Katharopoulos and Apoorv Vyas and Nikolaos Pappas and François Fleuret},
+      year={2020},
+      eprint={2006.16236},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2006.16236},
+}
 
 @article{Rosenblatt58,
   author  = {Frank Rosenblatt},

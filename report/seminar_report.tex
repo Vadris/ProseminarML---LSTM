@@ -116,9 +116,10 @@ This section will outline related papers about recurrent networks that were ment
 
 \paragraph{Multilayer perceptron.} The single‐layer perceptron \cite{Rosenblatt58} laid the conceptual 
 foundation for neural computation, but it was limited to linearly separable problems. Adding hidden layers yields the
-Multilayer Perceptron (MLP), which introduced distributed internal representations and universal function approximation capabilities.
+Multilayer Perceptron (MLP), which introduced distributed internal representations and universal function approximation capabilities \cite{Hornik89}.
 
-\paragraph{Stochastic gradient descent.} Training neural nets at scale relies on stochastic gradient descent (SGD), in which parameter updates are computed from small, randomly sampled batches of data rather than the full dataset, dramatically reducing computation and memory costs.
+\paragraph{Stochastic gradient descent.} Training neural nets at scale relies on stochastic gradient descent (SGD), in which 
+parameter updates are computed from small, randomly sampled batches of data rather than the full dataset, dramatically reducing computation and memory costs \cite{Bottou10}.
 
 \paragraph{Backpropagation.}
  The learning algorithm that made deep networks practical is backpropagation, first popularized for 
@@ -146,7 +147,7 @@ this issue is not a mere optimization of the RNN but requires architectural chan
 \end{itemize}
 
 
-\section{Foundational Concepts}
+\section{Foundational Concepts (Leon)}
 
 Long Short-Term Memory models are a variant of Recurrent Neural Networks which is a type of Neural Network.
 Neural Networks are the basis upon those architectures are build. This section aims to
@@ -237,7 +238,7 @@ identity function is used for every Percetpron the entire network can be describ
 a non-linear activation function should be used to make the network capable of learning non-linear
 decision boundaries. When choosing an activation function there are some important
 properties which should be respected while making such a choice. The activation function should be fully differentiable, which makes
-computing the gradient easier, but is not required in all cases as workarounds can be made e.g. ReLU. It should also be computationally
+computing the gradient easier. It should also be computationally
 cheap as its being run many times during a forward pass. \\
 
 % TODO: some example / commonly used funcs
@@ -246,11 +247,11 @@ With loss functions the performance of a neural network on a given input can be 
 predicted output of the model. Using loss functions we can quantify the error in the prediction of the neural network, which 
 is a metric we can optimize for. There are again many options for choosing a loss function but it heavily depends on the nature of the
 problem you're trying to solve by using a model: either classification or regression. A common loss function to use when trying to optimize 
-regression tasks is the Mean Squared Error (MSE):
+regression tasks is the Mean Squared Error (MSE) \cite{Goodfellow16}:
 
 $$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = \frac{1}{n}\sum^n_{i=1}{(y_i-\hat{y}_i)^2}$$
 
-where $\mathbf{y}$ is the prediction of the model and $\mathbf{\hat{y}}$ the ground truth. When solving classification tasks the Cross Entropy Loss function is often used:
+where $\mathbf{y}$ is the prediction of the model and $\mathbf{\hat{y}}$ the ground truth. When solving classification tasks the Cross Entropy Loss function is often used \cite{Goodfellow16}:
 
 
 $$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = -\sum^n_{i=1}{y_i\log(\hat{y}_i)}$$
@@ -258,7 +259,7 @@ $$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = -\sum^n_{i=1}{y_i\log(\hat{y}_i)}$$
 With loss functions we have a metric to optimize against, which can be used in an optimization algorithm called 
 gradient descent. It will minimize the loss function by iteratively computing the error gradient and updating
 the weights in the opposite direction of the gradient of the loss function. This is the update rule according
-to gradient descent:
+to gradient descent: \cite{Bottou10, Goodfellow16}
 
 $$ \theta \leftarrow \theta - \eta \nabla_{\theta}\mathcal{L}(\theta)$$
 
@@ -716,19 +717,19 @@ Equation \ref{eqn:forget-net-in} describes the net inputs for the forget gate, a
 
 \pagebreak
 
-\subsubsection{Bidirectional LSTM}
+\subsubsection{Bidirectional LSTM (Leon)}
 
 \begin{figure}[h!]
     \centering
     \includegraphics[height=7.5cm]{./pictures/brnn.png}
-    \caption{LSTM Cell\\ Source: \cite{graves2013speechrecognitiondeeprecurrent}}
+    \caption{Unrolled bidirectional recurrent network\\ Source: \cite{graves2013speechrecognitiondeeprecurrent}}
     \label{fig:brnn}
 \end{figure}
 
-Building upon the the bidirectional RNN \cite{Schuster97} the bidirectional LSTM processes input sequences not only in the 
+Building upon bidirectional RNN \cite{Schuster97} the bidirectional LSTM processes input sequences not only in the 
 forward direction but also in the backward direction. It has 2 lstm layers where one is processing the forward direction
-and the other the backward direction. The outputs of the 2 layers are then concatinated. In the final encoding both 
-information about the past and the future are embedded \cite{Graves05}.\\
+and the other the backward direction. The final representation consists of the outputs of the 2 layers which are then merged together,
+usually concatenation is used. In the final encoding both information about the past and the future are embedded \cite{Graves05}.\\
 Figure \ref{fig:brnn} shows a bidirectional rnn with 2 recurrent layers. The first layer $\overrightarrow{h}_t$ processes
 the input in the forward direction while the second layer $\overleftarrow{h}_t$ in the backward direction.
 
@@ -749,8 +750,8 @@ inject order information about where a token is inside of a sequence of tokens i
 The next innovation sparked by transformers was self-attention. Self-attention lets the model assign learned weights to the influence of every token on every other token.
 When predicting the next token in sequence some tokens capture more semantic meaning than others and theise will be highlighted for the neural network by the 
 attention mechanism. The attention is learned by the transformer in the training process \cite{vaswani2017attention}.
-Self attention scales very well because its applied pair wise to every token. By computing this using matrix multiplication,
-modern gpus can be fully uitilized as they are optimized for this exact use case.
+The computational and memory cost of self-attention as presentend in \cite{vaswani2017attention} is $\mathcal{O}(n^2)$. Though there are efforts
+to optimize the self attention mechanism to reduce its complexity to $\mathcal{O}(n)$. \cite{katharopoulos2020transformersrnnsfastautoregressive}
 
 
 While LSTM networks propagate past information by passsing the hidden state into the next iteration, transformers attend to the entire input sequence in every
@@ -768,13 +769,15 @@ remembering long term dependencies. Transformers are best at processing the data
 
 \section{Applications}
 
-\subsection{Natural Language Processing (Leon)}
+\subsection{Speech Recognition (Leon)}
 
 We have already established that LSTM networks are great at working with sequence data. One example where LSTM networks
-have been successfully used is speech recognition. The LSTM network learns temporal patterns in audio and captures long 
+have been successfully used is speech recognition \cite{Graves04}. The LSTM network learns temporal patterns in audio and captures long 
 term relationships. They have achieved state of the art results in a paper by Google in 2014 \cite{sak2014longshorttermmemorybased}.
 Researchers at google showed that a deep LSTM network outperformed traditional deep neural networks for this problem.
-It was even better then a feed forward neural network with 10x more parameters \cite{sak2014longshorttermmemorybased}.
+It was even better then a feed forward neural network with 10x more parameters \cite{sak2014longshorttermmemorybased}.\\
+
+
 They used an LSTM variant called Long Short-Term Memory Projected (LSTMP) architecture \cite{sak2014longshorttermmemorybased} which
 outperformed the traditional LSTM architecture. The LSTMP architecture differs from the traditional LSTM one by not having a LSTM layer
 which output is directly connected to its input but they first do a linear projection with a fully connected layer and its output will represent the 
