@@ -93,7 +93,7 @@
 \include{titlepage}
 
 \begin{abstract}
-
+\textbf{Abstract (Fynn).} Long Short Term Memory is a commonly used Recurrent Neural Network Architecture. This paper will give a short overview of the foundational concepts leading up to the invention of the architecture. Then the architecture will be explained, before formalizing. Afterwards an example implementation using PyTorch will be showcased, and tested on a simple sequence. Next limitations will be discussed, leading to variations of the architecture, such as the common addition of a forget gate, as well as a comparison to alternative architectures such as Transformers. Afterwards some applications of the architecture will be highlighted. Finally the main results are summed up and a brief outlook for the future of the LSTM architecture is given.
 \end{abstract}
 
 \tableofcontents
@@ -107,11 +107,15 @@ Similarly, most forms of music contain structures and patterns, such as rhythms,
 In theory Recurrent Neural Networks can pick up on those patterns, but the algorithms used to train these networks, namely "Back-Propagation Through Time" (BPTT) or "Real-Time Recurrent Learning" (RTRL) had the problem of vanishing or exploding gradients, which made training RNNs impractical, when compared to traditional Feedforward Neural Networks. This problem gets amplified as the minimum lag between time steps increases.\cite{hochreiter1997lstm,werb1990bptt}\\
 The LSTM Architecture, as first described by Sepp Hochreiter and Jürgen Schmidhuber in their 1997 paper, "Long Short-Term Memory" and later refined by Felix A. Gers, Jürgen Schmidhuber and Fred Cummins in their paper "Learning to Forget: Continual Prediction with LSTM" published in 2000, aims to solve some of those issues, by introducing a modified version of the classical RNN structure, to improve the flow of the error signal through the network.\cite{hochreiter1997lstm}\\
 Since then, LSTM networks have played a significant role in the development of machine learning-based sequence modeling, most notably in natural language processing, time series forecasting, music generation, and speech recognition.\cite{eck2002musicgeneration,torres2022elctricityforecasting,gers2001timeseries,nielsen2024electricitypriceforcasting, gers2000lstmnlp}\\
-\textbf{Outline of Paper.} In Section 2 a few important previous works will be reviewed. Section 3 will cover foundational concepts, such as feedforward neural networks and recurrent neural networks and will examine the problems that lead to the development of the LSTM architecture. Section 4 covers the principle of operation as well as mathematical formalization and implementation of the LSTM architecture.  In Section 5 limitations of the architecture will be examined as well as variations and alternatives, that might resolve some of those problems, and Section 6 examines possible applications for LSTMs.\\
+\textbf{Outline of Paper.} In Section 2 a few important related works will be reviewed. Section 3 will cover foundational concepts, such as feedforward neural networks and recurrent neural networks and will examine the problems that lead to the development of the LSTM architecture. Section 4 covers the principle of operation as well as mathematical formalization and implementation of the LSTM architecture.  In Section 5 limitations of the architecture will be examined as well as variations and alternatives, that might resolve some of those problems, and Section 6 examines possible applications for LSTMs.\\
 
-\section{Previous Work}
+\section{Related Work (Leon)}
 
-\section{Foundational Concepts}
+% TODO:
+Presents historical context, foundational studies, and key developments leading up to Hochreiter and Schmidhuber's 1997 paper.
+(Approximately 1 page, written by Leon)
+
+\section{Foundational Concepts (Leon)}
 
 Long Short-Term Memory models are a variant of Recurrent Neural Networks which is a type of Neural Network.
 Neural Networks are the basis upon those architectures are build. This section aims to
@@ -366,12 +370,6 @@ of other RNN Variants notably LSTM networks.
   to \emph{copy} or \emph{forget} information.  As a result, RNNs tend to over‑weight recent inputs and under‑weight older ones.
 \end{enumerate}
 
-\section{Related Work}
-
-% TODO:
-Presents historical context, foundational studies, and key developments leading up to Hochreiter and Schmidhuber's 1997 paper.
-(Approximately 1 page, written by Leon)
-
 \section{LSTM Architecture}
 \subsection{Principle of Operation (Fynn)}
 \subsubsection{Intuitive Explanation}
@@ -386,7 +384,7 @@ The solution proposed by Hochreiter and Schmidhuber introduces so-called 'gate u
 \\As their name suggests, gate units are used to restrict the flow of information.  The amount of gating applied to an input is determined by values computed from another input, enabling the gate to open and close depending on the context. Figure \ref{fig:lstm-cell} shows input and output gates represented by large black dots inside the cell, where input flows from left to right through the gate and control input reaches the gate from the bottom.\cite{hochreiter1997lstm}
 Internally, the cell stores a state that normally starts at \begin{math}0\end{math} and to which the scaled input is added. This state is then scaled using the activation of the output gate to compute the output.
 This means that an LSTM cell comprises three individual parts:\\
-\textbf{Input Gate.} The input gate. The input gate controls how much of the cell's input should be stored in memory, thereby determining which inputs are relevant. in the given context.\\
+\textbf{Input Gate.} The input gate controls how much of the cell's input should be stored in memory, thereby determining which inputs are relevant. in the given context.\\
 \textbf{Internal State.} The internal state can be viewed as the cell's memory. It is computed using the state from the previous time step to which the cell input activations, after scaling using the input gate activations are added.\\
 \textbf{Output Gate.} The output gate scales the cell state before output, thereby controlling the retrieval of information from the cell.\cite{hochreiter1997lstm} \\
 To improve understanding of how information flows through an LSTM cell, let us follow the flow of information through the cell at a single time step:
@@ -438,7 +436,7 @@ The function \begin{math}g\end{math} is used to scale the cell net input before 
 Note that multiplying two vectors together does not give the dot product, but rather the Hadamard product, which multiplies vectors component-wise.\cite{gokmen2018hadamard} This allows each component of the vector to be gated individually.
 An index \begin{math}j\end{math} can be added to identify individual cells. This has been omitted here to make the notation easier to read.\cite{hochreiter1997lstm}
 
-
+\subsection{Example Implementation (Fynn)}
 \subsubsection{Network Architecture}
 Before implementing a simple LSTM network, the network architecture must first be defined.
 For simplicity, the activations for the cell, input gate and output gate will be the output activations, as well as the activations of the input units:   \begin{math}u\in\{c, x, b \}\end{math}, where \begin{math}y^c(t)\end{math} are the output activations at time \begin{math}t\end{math}, \begin{math}y^x(t-1)=x(t)\end{math} are the activations of the input units at time \begin{math}t\end{math} and \begin{math}y^b(t-1)=b\end{math} are the bias units.\cite{hochreiter1997lstm}\\ 
@@ -643,8 +641,7 @@ Next, the performance is tested with noise and sampling lag added by simply adju
     \label{fig:loss-noise}
 \end{figure}
 \\The resulting graphs, shown in Figure \ref{fig:loss-noise}, demonstrate that the model's performance is only slightly worse than on data with no noise. The loss during training settles at a slightly higher value and the loss during testing is about \begin{math}0.1\end{math} higher for short sequences and  \begin{math}0.05\end{math} higher for longer sequences.\\
-\textbf{Possible Improvements:}
-As the input is a repeating sequence of values, the implementation could be improved by introducing a forget gate. This would allow the network to predict the next values without needing to consider the entire previous sequence.\cite{forget-gate}\\
+\textbf{Possible Improvements:} As the input is a repeating sequence of values, the implementation could be improved by introducing a forget gate. This would allow the network to predict the next values without needing to consider the entire previous sequence.\cite{gers1999forgetgate}\\
 Another way to get a better performance would be to use a Gated recurrent unit (GRU) instead of an LSTM, as GRUs often perform better with short sequences.\cite{cahuantzi2023lstmvsgru}
 \section{Limitations and Alternatives}
 
@@ -661,13 +658,13 @@ Although LSTMs solve some of the problems associated with classical RNNs, they a
 \subsection{Variants}
 
 \subsubsection{LSTM with Forget Gate (Fynn)}
-\begin{figure}
+\begin{figure}[h]
     \centering
     \includegraphics[width=0.75\linewidth]{Structure-of-LSTM-cell-which-introduces-three-special-gates-Input-Gate-i-Forget-Gate.png}
     \caption{LSTM Cell with forget gate\\ Source: \cite{nguyen2022lstmforgetgraphic}}
     \label{fig:lstm-forget}
 \end{figure}
-One of the first variation of Hochreiter and Schmidhuber's architecture, was the introduction of a forget gate. The reason for its introduction is that there is no way for the internal state of the cell to be reset in the original architecture. To fix this a forget gate can be introduced, which restricts how much of the previous state is kept in the next time step.\cite{gers1999forgetgate}
+One of the first variation of Hochreiter and Schmidhuber's architecture, was the introduction of a forget gate. The reason for its introduction is that there is no way for the internal state of the cell to be reset in the original architecture. To fix this a forget gate can be introduced, which restricts how much of the previous state is kept in the next time step.\cite{gers1999forgetgate}\\
 Figure \ref{fig:lstm-forget} shows an LSTM cell, with the added forget gate on the left of the cell. Note that the input gate is labeled as "Update Gate" in this graphic.\\
 The forget gate is implemented like the other with\cite{gers1999forgetgate}
 \begin{equation}
@@ -676,7 +673,7 @@ The forget gate is implemented like the other with\cite{gers1999forgetgate}
 \end{equation}
 and
 \begin{equation}
-    y^\varphi(t)=f_\varphi\left(net_\varphi(t)\right)
+    y^\varphi(t)=f_\varphi\left(net_\varphi(t)\right).
     \label{eqn:forget-actiavtions}
 \end{equation} 
 Equation \ref{eqn:forget-net-in} describes the net inputs for the forget gate, and equation \ref{eqn:forget-actiavtions} describes the activation for the forget gate. Using those a new equation for the cell state can be defined as\cite{gers1999forgetgate}
@@ -702,11 +699,11 @@ Examines notable variants discussing their respective enhancements and capabilit
 
 \subsection{LSTM vs GRU}
 
-\subsection{LSTM vs Transformers}
+\subsection{LSTM vs Transformers (Leon)}
 
 \section{Applications}
 
-\subsection{Natural Language Processing}
+\subsection{Natural Language Processing (Leon)}
 
 We have already established that LSTM networks are great at working with sequence data. One example where LSTM networks
 have been successfully used is speech recognition. The LSTM network learns temporal patterns in audio and captures long 
@@ -726,14 +723,12 @@ Kılıç et al. (2024) uses the LSTM architecture to predict electricity prices,
 \subsection{Music and Audio (Fynn)}
 As mentioned in the introduction, music has structures and patterns, where the next note or chord depends on the previous ones. LSTMs can learn those patterns and predict what comes next, which allows them to generate music.\cite{eck2002musicgeneration}\\
 In their 2002 paper Eck and Schmidhuber use an LSTM network to generate chord progressions, as well as melodies and chord progressions. Their network successfully managed to pick up on patterns in a style of music and reproduce those patterns to compose new music in the same style.\cite{eck2002musicgeneration}  
-\subsection{Medical}
+\subsection{Medical (Leon)}
 
-\section{Conclusion}
-
-Summarizes the relevance of LSTM networks, reflecting on current applications and potential future directions.
-(Approximately 0.5 pages, written by Fynn)
-% TODO:
-
+\section{Conclusion (Fynn)}
+The LSTM architecture introduced gate units and memory cells, effectively eliminating the vanishing gradient problem that had prevented RNNs from reaching their full potential.\cite{hochreiter1997lstm} 
+This enabled LSTMs to be used for tasks such as time series forecasting, music generation, and natural language processing.\cite{eck2002musicgeneration,nielsen2024electricitypriceforcasting,gers2001timeseries,torres2022elctricityforecasting,sak2014longshorttermmemorybased}\\
+Although LSTMs have been replaced by architectures such as transformers in many applications, they are still useful because they perform better with small datasets. This is why further research into improving the performance of this architecture is likely.\cite{alselwi2024lstmfuture} Furthermore, they will likely form the basis of new architectures. For example, LSTM-Transformer hybrid architectures already exist today. \cite{zhao2025lstmtransformerhybrid} 
 \bibliographystyle{alpha}
 \bibliography{abbrev,seminar_report}
 \end{document}

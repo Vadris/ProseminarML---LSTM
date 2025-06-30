@@ -38,17 +38,6 @@
     year={2024}
 }
 
-@InProceedings{forget-gate,
-  author={Gers, F.A. and Schmidhuber, J. and Cummins, F.},
-  booktitle={1999 Ninth International Conference on Artificial Neural Networks ICANN 99. (Conf. Publ. No. 470)}, 
-  title={Learning to forget: continual prediction with LSTM}, 
-  year={1999},
-  volume={2},
-  number={},
-  pages={850-855 vol.2},
-  keywords={},
-  doi={10.1049/cp:19991218}}
-
 @article{training-graphs,
 author = {Ainsworth, Mark and Shin, Yeonjong},
 title = {Plateau Phenomenon in Gradient Descent Training of RELU Networks: Explanation, Quantification, and Avoidance},
@@ -389,4 +378,32 @@ ABSTRACT={In our previous work we have shown that resistive cross point devices,
   pages     = {177--186},
   year      = {2010},
   doi       = {10.1007/978-3-7908-2604-3_16}
+}
+
+@article{alselwi2024lstmfuture,
+title = {RNN-LSTM: From applications to modeling techniques and beyond—Systematic review},
+journal = {Journal of King Saud University - Computer and Information Sciences},
+volume = {36},
+number = {5},
+pages = {102068},
+year = {2024},
+issn = {1319-1578},
+doi = {https://doi.org/10.1016/j.jksuci.2024.102068},
+url = {https://www.sciencedirect.com/science/article/pii/S1319157824001575},
+author = {Safwan Mahmood Al-Selwi and Mohd Fadzil Hassan and Said Jadid Abdulkadir and Amgad Muneer and Ebrahim Hamid Sumiea and Alawi Alqushaibi and Mohammed Gamal Ragab},
+keywords = {Machine learning, Deep learning, Recurrent neural networks, Long short-term memory, Weights initialization, Weights optimization, Systematic literature review},
+abstract = {Long Short-Term Memory (LSTM) is a popular Recurrent Neural Network (RNN) algorithm known for its ability to effectively analyze and process sequential data with long-term dependencies. Despite its popularity, the challenge of effectively initializing and optimizing RNN-LSTM models persists, often hindering their performance and accuracy. This study presents a systematic literature review (SLR) using an in-depth four-step approach based on the PRISMA methodology, incorporating peer-reviewed articles spanning 2018–2023. It aims to address how weight initialization and optimization techniques can bolster RNN-LSTM performance. This SLR offers a detailed overview across various applications and domains, and stands out by comprehensively analyzing modeling techniques, datasets, evaluation metrics, and programming languages associated with these networks. The findings of this SLR provide a roadmap for researchers and practitioners to enhance RNN-LSTM networks and achieve superior results.}
+}
+@Article{zhao2025lstmtransformerhybrid,
+AUTHOR = {Zhao, Yali and Guo, Yingying and Wang, Xuecheng},
+TITLE = {Hybrid LSTM–Transformer Architecture with Multi-Scale Feature Fusion for High-Accuracy Gold Futures Price Forecasting},
+JOURNAL = {Mathematics},
+VOLUME = {13},
+YEAR = {2025},
+NUMBER = {10},
+ARTICLE-NUMBER = {1551},
+URL = {https://www.mdpi.com/2227-7390/13/10/1551},
+ISSN = {2227-7390},
+ABSTRACT = {Amidst global economic fluctuations and escalating geopolitical risks, gold futures, as a pivotal safe-haven asset, demonstrate price dynamics that directly impact investor decision-making and risk mitigation effectiveness. Traditional forecasting models face significant limitations in capturing long-term trends, addressing abrupt volatility, and mitigating multi-source noise within complex market environments characterized by nonlinear interactions and extreme events. Current research predominantly focuses on single-model approaches (e.g., ARIMA or standalone neural networks), inadequately addressing the synergistic effects of multimodal market signals (e.g., cross-market index linkages, exchange rate fluctuations, and policy shifts) and lacking the systematic validation of model robustness under extreme events. Furthermore, feature selection often relies on empirical assumptions, failing to uncover non-explicit correlations between market factors and gold futures prices. A review of the global literature reveals three critical gaps: (1) the insufficient integration of temporal dependency and global attention mechanisms, leading to imbalanced predictions of long-term trends and short-term volatility; (2) the neglect of dynamic coupling effects among cross-market risk factors, such as energy ETF-metal market spillovers; and (3) the absence of hybrid architectures tailored for high-frequency noise environments, limiting predictive utility for decision support. This study proposes a three-stage LSTM–Transformer–XGBoost fusion framework. Firstly, XGBoost-based feature importance ranking identifies six key drivers from thirty-six candidate indicators: the NASDAQ Index, S&P 500 closing price, silver futures, USD/CNY exchange rate, China’s 1-year Treasury yield, and Guotai Zhongzheng Coal ETF. Second, a dual-channel deep learning architecture integrates LSTM for long-term temporal memory and Transformer with multi-head self-attention to decode implicit relationships in unstructured signals (e.g., market sentiment and climate policies). Third, rolling-window forecasting is conducted using daily gold futures prices from the Shanghai Futures Exchange (2015–2025). Key innovations include the following: (1) a bidirectional LSTM–Transformer interaction architecture employing cross-attention mechanisms to dynamically couple global market context with local temporal features, surpassing traditional linear combinations; (2) a Dynamic Hierarchical Partition Framework (DHPF) that stratifies data into four dimensions (price trends, volatility, external correlations, and event shocks) to address multi-driver complexity; (3) a dual-loop adaptive mechanism enabling endogenous parameter updates and exogenous environmental perception to minimize prediction error volatility. This research proposes innovative cross-modal fusion frameworks for gold futures forecasting, providing financial institutions with robust quantitative tools to enhance asset allocation optimization and strengthen risk hedging strategies. It also provides an interpretable hybrid framework for derivative pricing intelligence. Future applications could leverage high-frequency data sharing and cross-market risk contagion models to enhance China’s influence in global gold pricing governance.},
+DOI = {10.3390/math13101551}
 }
