@@ -111,11 +111,42 @@ Since then, LSTM networks have played a significant role in the development of m
 
 \section{Related Work (Leon)}
 
-% TODO:
-Presents historical context, foundational studies, and key developments leading up to Hochreiter and Schmidhuber's 1997 paper.
-(Approximately 1 page, written by Leon)
+This section will outline related papers about recurrent networks that were mentioned in \cite{hochreiter1997lstm}.
 
-\section{Foundational Concepts (Leon)}
+
+\paragraph{Multilayer perceptron.} The single‐layer perceptron \cite{Rosenblatt58} laid the conceptual 
+foundation for neural computation, but it was limited to linearly separable problems. Adding hidden layers yields the
+Multilayer Perceptron (MLP), which introduced distributed internal representations and universal function approximation capabilities.
+
+\paragraph{Stochastic gradient descent.} Training neural nets at scale relies on stochastic gradient descent (SGD), in which parameter updates are computed from small, randomly sampled batches of data rather than the full dataset, dramatically reducing computation and memory costs.
+
+\paragraph{Backpropagation.}
+ The learning algorithm that made deep networks practical is backpropagation, first popularized for 
+ feed‑forward nets \cite{Rumelhart86}.  For recurrent networks, 
+ \cite{werb1990bptt} introduced \emph{backpropagation‑through‑time} (BPTT), unrolling the 
+ network over the sequence length so that gradients can be accumulated across time steps.
+
+\paragraph{Early recurrent networks.} The first recurrent networks namely Elman's Simple Recurrent Network (SRN) \cite{Elman90},
+popularized the idea of hidden recurrent units, which develops internal representations of prior seen context.
+They override their hidden state every iteration, which lead to difficulties in learning dependencies spanning more then
+a couple time steps.
+
+\paragraph{Vanishing gradient problem.} The vanishing / exploding gradient problem was already demonstrated by by Hochreiter \cite{hochreiter1991}.
+He proved that products of Jacobian matrices let the gradients go towards zero or infinity. This in turn meant that the solution to
+this issue is not a mere optimization of the RNN but requires architectural change.
+
+\paragraph{Early attempts at long-term context.} Several ideas tried to save the problems of long term context retention.
+
+\begin{itemize}
+  \item{History Compressor.} A stack of autoencoders that should only update the hidden state when something 
+    "suprising" happens, as in new information that should be remembered. This way the error flows properly during 
+    intervals where nothing happens as in no new information is remembered \cite{Schmidhuber92}.
+  \item{Continuous history compression.} Builds on top of the previous history compressor by extending it to 
+    multiple time scales \cite{Schmidhuber93}.
+\end{itemize}
+
+
+\section{Foundational Concepts}
 
 Long Short-Term Memory models are a variant of Recurrent Neural Networks which is a type of Neural Network.
 Neural Networks are the basis upon those architectures are build. This section aims to
@@ -225,9 +256,9 @@ where $\mathbf{y}$ is the prediction of the model and $\mathbf{\hat{y}}$ the gro
 $$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = -\sum^n_{i=1}{y_i\log(\hat{y}_i)}$$
 
 With loss functions we have a metric to optimize against, which can be used in an optimization algorithm called 
-gradient decent. It will minimize the loss function by iteratively computing the error gradient and updating
+gradient descent. It will minimize the loss function by iteratively computing the error gradient and updating
 the weights in the opposite direction of the gradient of the loss function. This is the update rule according
-to gradient decent:
+to gradient descent:
 
 $$ \theta \leftarrow \theta - \eta \nabla_{\theta}\mathcal{L}(\theta)$$
 
@@ -235,7 +266,7 @@ Here, $\theta$ represents the parameters, $\eta$ the learning rate that determin
 the opposite direction of the gradient and $\nabla_{\theta}\mathcal{L}(\theta)$ denotes the gradient 
 of the loss function with respect to parameters $\theta$. To compute the entire gradient, all the errors for the 
 entire dataset would need to be averaged for the most accurate estimation of the gradient. Therefore variants 
-like stochastic gradient decent exist, that first randomizes the order of dataset, second organizes it into batches of
+like stochastic gradient descent exist, that first randomizes the order of dataset, second organizes it into batches of
 the same size. Now we only average the gradient for all samples inside the batch and make an update to the model parameters \cite{Bottou10}.
 
 
@@ -284,11 +315,14 @@ neural networks (RNNs). Recurrent neural networks accomplish that by carrying a 
             node[below]{$U_h$}
       (h);
   \end{tikzpicture}
+  \captionof{figure}{Simple RNN with one hidden layer} 
+  \label{fig:rnn}
 \end{center}
 
-The RNN Cell is very similar to the Perceptron. It still has weights, biases and an activation function. Additionally 
+The RNN Cell is very similar to the Perceptron. It weights, biases and an activation function. Additionally 
 it has a recurrent connection to itself: the output of a rnn cell at timestep $t$ is feed back to itself at timestep
 $t+1$ multiplied by its own weight. That output value is called the hidden state $h_t$ of an rnn cell.
+Figure \ref{fig:rnn} depicts a RNN cell with one hidden layer.
 A Elman RNN is described by the forward state update and output projection \cite{Elman90}:
 
 $$
@@ -338,8 +372,6 @@ Figure~\ref{fig:rnn_unroll} depicts the unrolled network for $T=3$.
 \end{center}
 
 
-
-
 Applying backpropagation on an unrolled graph is called backpropagation through time (BPTT). On the acyclic graph 
 the standard backpropagation algorithm can be applied, but the weights for all instances of the recurrent neural network
 in the unrolled graph are shared. The final update for the parameter matrices are accumulated though time steps, so there 
@@ -364,7 +396,7 @@ of other RNN Variants notably LSTM networks.
   Empirical analyses show that standard RNNs spontaneously forget information that is not constantly reinforced.
 \item \textbf{Difficulty modelling very long sequences.}  Even when exploding gradients are clipped and vanishing 
   gradients mitigated, the truncation window in BPTT means the effective context length is often limited to a few hundred
-  timesteps.  Tasks such as document‑level language modelling require mechanisms that can propagate information across thousands of steps \cite{pascanu2013rnntraining}.
+  time steps.  Tasks such as document‑level language modelling require mechanisms that can propagate information across thousands of steps \cite{pascanu2013rnntraining}.
 \item \textbf{Bias towards recent inputs.}  The recurrent update $h_t=\phi(W_h x_t + U_h h_{t-1})$ blends the new input with a 
   transformed version of the previous hidden state.  Without gating, this blend is rigid and the network cannot dynamically decide 
   to \emph{copy} or \emph{forget} information.  As a result, RNNs tend to over‑weight recent inputs and under‑weight older ones.
@@ -681,25 +713,58 @@ Equation \ref{eqn:forget-net-in} describes the net inputs for the forget gate, a
     s_c(t)=y^\varphi(t)s_c(t-1)+y^{in}(t)g\left(net_c(t)\right).    
 \end{equation}
   This addition is very common, and many LSTM implementations in commonly used machine learning frameworks include a forget gate.\cite{keras-lstm, pytorch-lstm}
- \subsubsection{Coupled Input-Forget Gate}
 
-\subsubsection{Simplified LSTM}
-
-\subsubsection{LSTM with Attention}
+\pagebreak
 
 \subsubsection{Bidirectional LSTM}
 
-\subsubsection{Deep LSTM}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[height=7.5cm]{./pictures/brnn.png}
+    \caption{LSTM Cell\\ Source: \cite{graves2013speechrecognitiondeeprecurrent}}
+    \label{fig:brnn}
+\end{figure}
 
-\subsubsection{Zoneout LSTM}
+Building upon the the bidirectional RNN \cite{Schuster97} the bidirectional LSTM processes input sequences not only in the 
+forward direction but also in the backward direction. It has 2 lstm layers where one is processing the forward direction
+and the other the backward direction. The outputs of the 2 layers are then concatinated. In the final encoding both 
+information about the past and the future are embedded \cite{Graves05}.\\
+Figure \ref{fig:brnn} shows a bidirectional rnn with 2 recurrent layers. The first layer $\overrightarrow{h}_t$ processes
+the input in the forward direction while the second layer $\overleftarrow{h}_t$ in the backward direction.
 
-Examines notable variants discussing their respective enhancements and capabilities.
-(Approximately 1-1.5 pages, written by Leon/Fynn)
-% TODO:
 
-\subsection{LSTM vs GRU}
+
+This architecture is used in sequence labeling \cite{huang2015bidirectionallstmcrfmodelssequence} and speech recognition \cite{graves2013speechrecognitiondeeprecurrent}.
 
 \subsection{LSTM vs Transformers (Leon)}
+
+The Transformer architecture relies on the attention mechanism as introduced in “Attention Is All You Need” paper.
+The main difference is that the recurrent update used by LSTM networks is replaced by a self-attention mechanism \cite{vaswani2017attention}.\\
+
+
+First, each input sequence is mapped to learned token embeddings and positional encodings. Positional encoding 
+inject order information about where a token is inside of a sequence of tokens inside its token representation instead of in the architecture of the model as in RNNs.
+
+
+The next innovation sparked by transformers was self-attention. Self-attention lets the model assign learned weights to the influence of every token on every other token.
+When predicting the next token in sequence some tokens capture more semantic meaning than others and theise will be highlighted for the neural network by the 
+attention mechanism. The attention is learned by the transformer in the training process \cite{vaswani2017attention}.
+Self attention scales very well because its applied pair wise to every token. By computing this using matrix multiplication,
+modern gpus can be fully uitilized as they are optimized for this exact use case.
+
+
+While LSTM networks propagate past information by passsing the hidden state into the next iteration, transformers attend to the entire input sequence in every
+step. Transformers do not suffer from vanishing or exploding gradient issues like RNN do.
+
+
+Because self-attention removes any timestep-to-timestep dependency, a Transformer can process all tokens in a sequence simultaneously. 
+In the original paper, Vaswani et al. report training their English-German “base” model to state-of-the-art quality in roughly 
+12 hours on 8 P100 GPUs—several-times faster than earlier RNN/LSTM systems that must handle tokens one-by-one \cite{vaswani2017attention}.
+
+
+Both architectures have their own advantages and disadvantages. LSTM networks are great at handling sequential data and 
+remembering long term dependencies. Transformers are best at processing the data in parallel.
+
 
 \section{Applications}
 
@@ -709,8 +774,8 @@ We have already established that LSTM networks are great at working with sequenc
 have been successfully used is speech recognition. The LSTM network learns temporal patterns in audio and captures long 
 term relationships. They have achieved state of the art results in a paper by Google in 2014 \cite{sak2014longshorttermmemorybased}.
 Researchers at google showed that a deep LSTM network outperformed traditional deep neural networks for this problem.
-It was even better then a feed forward neural network with 10x more parameters \cite[1]{sak2014longshorttermmemorybased}.
-They used an LSTM variant called Long Short-Term Memory Projected (LSTMP) architecture \cite[2]{sak2014longshorttermmemorybased} which 
+It was even better then a feed forward neural network with 10x more parameters \cite{sak2014longshorttermmemorybased}.
+They used an LSTM variant called Long Short-Term Memory Projected (LSTMP) architecture \cite{sak2014longshorttermmemorybased} which
 outperformed the traditional LSTM architecture. The LSTMP architecture differs from the traditional LSTM one by not having a LSTM layer
 which output is directly connected to its input but they first do a linear projection with a fully connected layer and its output will represent the 
 hidden state of the cell.
@@ -723,7 +788,14 @@ Kılıç et al. (2024) uses the LSTM architecture to predict electricity prices,
 \subsection{Music and Audio (Fynn)}
 As mentioned in the introduction, music has structures and patterns, where the next note or chord depends on the previous ones. LSTMs can learn those patterns and predict what comes next, which allows them to generate music.\cite{eck2002musicgeneration}\\
 In their 2002 paper Eck and Schmidhuber use an LSTM network to generate chord progressions, as well as melodies and chord progressions. Their network successfully managed to pick up on patterns in a style of music and reproduce those patterns to compose new music in the same style.\cite{eck2002musicgeneration}  
+
 \subsection{Medical (Leon)}
+
+A 7 layer LSTM network was trained to detect Type 2 diabetes in the early stages in Oman. The model is composed of five stacked
+LSTM layeres with 20 Units each feeding into a fully connected output layer. It reaches \begin{math}99.4 \%\end{math} accuracy and an 
+AUROC of \begin{math}0.945\end{math} while maintaining \begin{math}100 \%\end{math} sensitivity on a \begin{math}20 \%\end{math} hold-out set \cite{AlSadi2024LSTM}.
+These results surpass the logistic regression baseline.
+
 
 \section{Conclusion (Fynn)}
 The LSTM architecture introduced gate units and memory cells, effectively eliminating the vanishing gradient problem that had prevented RNNs from reaching their full potential.\cite{hochreiter1997lstm} 
