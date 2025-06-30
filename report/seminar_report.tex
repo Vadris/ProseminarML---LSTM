@@ -155,22 +155,10 @@ provide a complete but rather shallow introduction into the foundations of neura
 
 \subsection{Neural Networks and Training}
 
-Neural networks are mostly build upon the Perceptron which can be thought of as the digital equivalent of a biological Neuron.
-On a high level the Perceptron has a some number of numerical inputs and computes a singular output value based on that \cite{Rosenblatt58}.
-
-A Perceptron is defined by its weights $w_i$, bias $b$ and the choice of the activation function $\phi$.
-The bias is required so the Perceptron can output $y \neq 0$ when all $x_i = 0$.
-Now having $n$ input values $x_0, x_1, ..., x_{n-1}, x_n$ the output of the perceptron can by computed like this:
-
-$$
-y=\phi\bigl(\sum_{i=0}^{n}w_i x_i + b\bigr)
-$$
-
-
 \begin{center}
 \begin{tikzpicture}
     % Draw input nodes
-    \foreach \h [count=\hi ] in {$x_2$,$x_1$,$x_0=1$}{%
+    \foreach \h [count=\hi ] in {$x_1$,$x_0$,$1$}{%
           \node[input] (f\hi) at (0,\hi*1.25cm-1.5 cm) {\h};
         }
     % Dot dot dot ... x_n
@@ -178,9 +166,9 @@ $$
     \node[input, below=0.62cm] (last_input) at (idots) {$x_n$};
     % Draw summation node
     \node[functions] (sum) at (4,0) {\Huge$\sum$};
-    \node[below=0.69cm] at (sum) {$\sum_{i=0}^n w_ix_i$};
+    \node[below=0.69cm] at (sum) {$\sum_{i=0}^n w_ix_i + b$};
     % Draw edges from input nodes to summation node
-    \foreach \h [count=\hi ] in {$w_2$,$w_1$,$w_0$}{%
+    \foreach \h [count=\hi ] in {$w_1$,$w_0$,$b$}{%
           \path (f\hi) -- node[weights] (w\hi) {\h} (sum);
           \draw[->] (f\hi) -- (w\hi);
           \draw[->] (w\hi) -- (sum);
@@ -192,14 +180,14 @@ $$
     \path[draw,->] (last_input) -- (last_weight);
     \path[draw,->] (last_weight) -- (sum);
     % Draw node for activation function
-    \node[functions] (activation) at (7,0) {};
+    \node[functions] (activation) at (7,0) {$f$};
     % Place activation function in its node
-    \begin{scope}[xshift=7cm]
-        \addaxes
-        % flexible selection of activation function
-        \relu
-        % \stepfunc
-    \end{scope}
+    % \begin{scope}[xshift=7cm]
+    %     \addaxes
+    %     % flexible selection of activation function
+    %     \relu
+    %     % \stepfunc
+    % \end{scope}
     % Connect sum to relu
     \draw[->] (sum) -- (activation);
     \draw[->] (activation) -- ++(1,0);
@@ -210,9 +198,22 @@ $$
 \end{tikzpicture}
 
 \captionof{figure}{A single Perceptron}
+\label{fig:perceptron}
 
 \end{center}
+Neural networks are mostly build upon the Perceptron which can be thought of as the digital equivalent of a biological Neuron.
+On a high level the Perceptron has a some number of numerical inputs and computes a singular output value based on that \cite{Rosenblatt58}.
 
+A Perceptron is defined by its weights $w_i$, bias $b$ and the choice of the activation function $f$.
+The bias is required so the Perceptron can output $y \neq 0$ when all $x_i = 0$.
+Now having $n$ input values $x_0, x_1, ..., x_{n-1}, x_n$ the output of the perceptron can by computed like this:
+
+$$
+y=f\bigl(\sum_{i=0}^{n}w_i x_i + b\bigr)
+$$
+
+
+The figure \ref{fig:perceptron} shows such a perceptron.
 A single basic Perceptron on its own is not particularly useful as
 it only models linear decision boundaries and cannot learn the xor function \cite{MinskyPapert69}.
 
@@ -225,13 +226,12 @@ is connected to each perceptron in layer $i+1$. The information strictly flows f
 intermediate hidden layers to the output layer, without any loops.
 Mathematically a feed forward neural network, with $L$ layers and $0 < l \leq L$ can be described by
 
-$$\mathbf{y}^{(l)} = \phi^{(l)}(\mathbf{W}^{(l)}\mathbf{y}^{(l-1)}+\mathbf{b}^{(l)})$$
+$$\mathbf{y}^{(l)} = f^{(l)}(\mathbf{W}^{(l)}\mathbf{y}^{(l-1)}+\mathbf{b}^{(l)})$$
 
 where $\mathbf{W}^{(l)}$ represents the weight matrix of layer $l$, $\mathbf{b}^{(l)}$ the bias vector of layer $l$,
-$\mathbf{y}^{(l-1)}$ the output vector of the previous layer or in case of $l=1$ the input vector
-and $\phi^{(l)}$ is the activation function applied element-wise. \\
+$\mathbf{y}^{(l-1)}$ the output vector of the previous layer or in case of $l=0$ the input vector
+and $f^{(l)}$ is the activation function applied element-wise. \\
 
-% TODO: is the above l=1 right?
 
 Now the choice of the activation function is very important, when using a multilayer Perceptron as when a linear activation function like the 
 identity function is used for every Percetpron the entire network can be described in a single layer. Therefore
@@ -240,8 +240,6 @@ decision boundaries. When choosing an activation function there are some importa
 properties which should be respected while making such a choice. The activation function should be fully differentiable, which makes
 computing the gradient easier. It should also be computationally
 cheap as its being run many times during a forward pass. \\
-
-% TODO: some example / commonly used funcs
 
 With loss functions the performance of a neural network on a given input can be computed by comparing the desired output with the 
 predicted output of the model. Using loss functions we can quantify the error in the prediction of the neural network, which 
