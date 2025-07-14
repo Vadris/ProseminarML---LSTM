@@ -11,6 +11,7 @@
 \usepackage{bm}
 \usepackage{booktabs}
 
+
 \usetikzlibrary{arrows,positioning}
 
 \mode<presentation>
@@ -36,7 +37,7 @@
 
 \title{Long Short-Term Memory}
 \subtitle{Joint Proseminar on Machine Learning and Image Processing}
-\date{February 30, 1337}
+\date{\today}
 \author{Fynn Jansen, Leon Benzer}
 \institute{Chair of Computer Science 13 (Computer Vision)\\RWTH Aachen}
 \makeatletter
@@ -49,27 +50,137 @@
 
 % ----------------------------------------------------------------
 
-% Constant Error Carousel
-\begin{frame}[t]{Naive Approach - Constant Error Flow}
-    Single Unit Constant Error Carousel:
+% Contents
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item \textbf{Introduction}
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Constant Error Flow}
+%Introduciton
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Data best described by sequences:
+\end{frame}
+
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Data best described by sequences:
+\begin{itemize}
+    \item Language
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Examples for sequence Data:
+\begin{itemize}
+    \item Language
+    \item Music \& Audio
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Examples for sequence Data:
+\begin{itemize}
+    \item Language
+    \item Music \& Audio
+    \item (Stock) prices
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Examples for sequence Data:
+\begin{itemize}
+    \item Language
+    \item Music \& Audio
+    \item (Stock) prices
+    \item Weather
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Introduction - The importance of Sequence Data}
+Examples for sequence Data:
+\begin{itemize}
+    \item Language
+    \item Music \& Audio
+    \item (Stock) prices
+    \item Weather
+\end{itemize}
+\begin{math}\implies\end{math} Real world data often best described by sequences
+\end{frame}
+
+
+
+% Recap
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item \textbf{Recap}
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Recap - RNNs}
+    
+\end{frame}
+
+\begin{frame}{Recap - Unstable Gradients}
+    
+\end{frame}
+
+% Constant Error Carousel
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item \textbf{Naive Solution}
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Naive Solution - Constant Error Flow}
+    Single Unit Constant Error Carousel:
+    \source{Hochreiter et al. 1997}
+\end{frame}
+
+\begin{frame}[t]{Naive Solution - Constant Error Flow}
     Single Unit Constant Error Carousel:
     \begin{itemize}
         \item Linear activation function : \begin{math}f(x)=x\end{math}
     \end{itemize}
+    \source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Constant Error Flow}
+\begin{frame}[t]{Naive Solution - Constant Error Flow}
     Single Unit Constant Error Carousel:
     \begin{itemize}
         \item Linear activation function : \begin{math}f(x)=x\end{math}
         \item Feedback connection weight : \begin{math}w=1\end{math}
     \end{itemize}
+    \source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Constant Error Flow}
+\begin{frame}[t]{Naive Solution - Constant Error Flow}
     Single Unit (\begin{math}j\end{math}) Constant Error Carousel:
     \begin{itemize}
         \item Linear activation function : \begin{math}f(x)=x\end{math}
@@ -79,24 +190,27 @@
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
     \end{figure}
+    \source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
-    \end{figure}   
+    \end{figure}
+    \source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
     \end{figure}
 Connected to other units:
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -105,9 +219,10 @@ Connected to other units:
 \begin{itemize}
     \item Input from unit \begin{math}i\end{math}
 \end{itemize}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -116,9 +231,10 @@ Connected to other units:
 \begin{itemize}
     \item Input from unit \begin{math}i\implies\end{math}  Single weight \begin{math}w_ji\end{math} for storing \& ignoring inputs
 \end{itemize}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -128,9 +244,10 @@ Connected to other units:
     \item Input from unit \begin{math}i\implies\end{math} Single weight \begin{math}w_ji\end{math} for storing \& ignoring inputs
     \item Output to unit \begin{math}k\end{math}
 \end{itemize}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -141,9 +258,10 @@ Connected to other units:
     
     \item Output to unit \begin{math}k\implies\end{math} Single weight \begin{math}w_{kj}\end{math} for controlling retrieval
 \end{itemize}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -155,9 +273,10 @@ Connected to other units:
     \item Output to unit \begin{math}k\implies\end{math} Single weight \begin{math}w_{kj}\end{math} for controlling retrieval
 \end{itemize}
 Conflicting weight update signals for \begin{math}w_{ji}\end{math} \& \begin{math}w_{kj}\end{math}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
-\begin{frame}[t]{Naive Approach - Problems}
+\begin{frame}[t]{Naive Solution - Problems}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -169,11 +288,28 @@ Connected to other units:
     \item Output to unit \begin{math}k\implies\end{math} Single weight \begin{math}w_{kj}\end{math} for controlling retrieval
 \end{itemize}
 Conflicting weight update signals for \begin{math}w_{ji}\end{math} \& \begin{math}w_{kj}\implies\end{math} Mechanism for storage and retrieval
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 % LSTM Architecture
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item \textbf{LSTM Architecture}
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+
 \begin{frame}[t]{LSTM Architecture - Gate Unit}
 Idea: Restrict flow based on context
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Gate Unit}
@@ -182,6 +318,7 @@ Idea: Restrict flow based on context
     \centering
     \includegraphics[width=0.2\linewidth]{images/GateUnit.png}
 \end{figure}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Gate Unit}
@@ -191,12 +328,13 @@ Idea: Restrict flow based on context
     \includegraphics[width=0.2\linewidth]{images/GateUnit.png}
 \end{figure}
 Input gets scaled by number computed from context
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 
-% LSTM Architecture
 \begin{frame}[t]{LSTM Architecture - Memory Cell}
 Memory Cell: CEC unit with input and output gate units
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Memory Cell}
@@ -205,6 +343,7 @@ Memory Cell: CEC unit with input and output gate units
     \centering
     \includegraphics[width=1\linewidth]{images/LSTM-Cell-Diagram.png}
 \end{figure}
+\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Network Topology}
@@ -318,15 +457,15 @@ Drawbacks:
 \begin{frame}[t]{LSTM Architecture - Limitations}
 Drawbacks:
 \begin{itemize}
-    \item Exploding Gradients: Additional methods like gradient clipping needed
+    \item Exploding Gradients
 \end{itemize}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Limitations}
 Drawbacks:
 \begin{itemize}
-    \item Exploding Gradients: Additional methods like gradient clipping needed
-    \item Computational Intensity: Up to 9 times more weights compared to traditional RNN
+    \item Exploding Gradients
+    \item Computational Intensity
 \end{itemize}
 \end{frame}
 
@@ -374,8 +513,32 @@ Drawbacks:
 
 
 % LSTM Variants
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item \textbf{Variants}
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Variants - LSTM with forget gate}
+\begin{figure}
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/Structure-of-LSTM-cell-which-introduces-three-special-gates-Input-Gate-i-Forget-Gate.png}
+\end{figure}
+\source{Nguyen et al. 2022}
+\end{frame}
+
 \begin{frame}[t]{Variants - LSTM with forget gate}
 Forget Gate:
+\source{Gers et al. 1999}
 \end{frame}
 
 \begin{frame}[t]{Variants - LSTM with forget gate}
@@ -383,6 +546,7 @@ Forget Gate:
 \begin{itemize}
     \item "Forgetting" by resetting state
 \end{itemize}
+\source{Gers et al. 1999}
 \end{frame}
 
 \begin{frame}[t]{Variants - LSTM with forget gate}
@@ -391,6 +555,7 @@ Forget Gate:
     \item "Forgetting" by resetting state
     \item Achieved by gating the previous state
 \end{itemize}
+\source{Gers et al. 1999}
 \end{frame}
 
 \begin{frame}[t]{Variants - LSTM with forget gate}
@@ -400,6 +565,7 @@ Forget Gate:
     \item Achieved by gating the previous state
     \item \begin{math}f_t=\sigma_i\left(U_{f}h_{t-1}+W_{f} x_t + b_f\right)\end{math}
 \end{itemize}
+\source{Gers et al. 1999}
 \end{frame}
 
 \begin{frame}[t]{Variants - LSTM with forget gate}
@@ -410,18 +576,359 @@ Forget Gate:
     \item \begin{math}f_t=\sigma_i\left(U_{f}h_{t-1}+W_{f} x_t + b_f\right)\end{math}
     \item \begin{math}C_t=f_t\odot C_{t-1}+i_t\odot\sigma_c\left(U_{c}h_{t-1}+W_{x}x_t + b_c\right)\end{math}
 \end{itemize}
+\source{Gers et al. 1999}
 \end{frame}
 
-\begin{frame}[t]{Variants - LSTM with forget gate}
-\begin{figure}
-    \centering
-    \includegraphics[width=0.75\linewidth]{images/Structure-of-LSTM-cell-which-introduces-three-special-gates-Input-Gate-i-Forget-Gate.png}
-\end{figure}
+
+%GRU
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item \textbf{GRU}
+    \item LSTM vs Transformer
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
 \end{frame}
 
+\begin{frame}[t]{GRU}
+
+\end{frame}
+
+% LSTM vs Transformer
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item \textbf{LSTM vs Transformer}
+    \item Applications
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{LSTM vs Transformers}
+    
+\end{frame}
+
+%LSTM Applications
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item \textbf{Applications}
+    \item Discussion
+    \item Conclusion
+\end{itemize}
+\end{frame}
+%Time Series Forecasting
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\end{frame}
+
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\begin{itemize}
+    \item Long sequences
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\begin{itemize}
+    \item Long sequences
+    \item Complex sequences
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\begin{itemize}
+    \item Long sequences
+    \item Complex sequences
+\end{itemize}
+Examples:
+\end{frame}
+
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\begin{itemize}
+    \item Long sequences
+    \item Complex sequences
+\end{itemize}
+Examples:
+\begin{itemize}
+    \item 2022: Deep LSTM Network forecasts electricity demand (1.5\% accuracy)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Time Series Forecasting}
+LSTMs perform better on:
+\begin{itemize}
+    \item Long sequences
+    \item Complex sequences
+\end{itemize}
+Examples:
+\begin{itemize}
+    \item 2022: Deep LSTM Network forecasts electricity demand (1.5\% accuracy)
+    \item 2024: LSTM Architecture forcasts electricity prices 
+\end{itemize}
+\end{frame}
+
+%Music Generation
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\end{frame}
+
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\begin{itemize}
+    \item Rhythms
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\begin{itemize}
+    \item Rhythms
+    \item Chord progressions
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\begin{itemize}
+    \item Rhythms
+    \item Chord progressions
+    \item Melodic motives
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\begin{itemize}
+    \item Rhythms
+    \item Chord progressions
+    \item Melodic motives
+\end{itemize}
+Easily representable as numbers
+\end{frame}
+
+\begin{frame}[t]{Applications - Music Generation}
+Music has temporal structure:
+\begin{itemize}
+    \item Rhythms
+    \item Chord progressions
+    \item Melodic motives
+\end{itemize}
+Easily representable as numbers\\
+2002: LSTM Architecture used to compose music
+\end{frame}
+
+%Discussion
+\begin{frame}[t]{Contents}
+\begin{itemize}
+    \item Introduction
+    \item Recap
+    \item Naive Solution
+    \item LSTM Architecture
+    \item Variants
+    \item GRU
+    \item LSTM vs Transformer
+    \item Applications
+    \item \textbf{Discussion}
+    \item Conclusion
+\end{itemize}
+\end{frame}
+\begin{frame}[t]{Discussion - the Future of LSTMs}
+Future of the LSTM architecture:
+\end{frame}
+
+\begin{frame}[t]{Discussion - the Future of LSTMs}
+Future of the LSTM architecture:
+\begin{itemize}
+    \item Largely replaced by transformers
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Discussion - the Future of LSTMs}
+Future of the LSTM architecture:
+\begin{itemize}
+    \item Largely replaced by transformers
+    \begin{itemize}
+        \item LSTMs still useful for small datasets (better performance)
+    \end{itemize} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Discussion - the Future of LSTMs}
+Future of the LSTM architecture:
+\begin{itemize}
+    \item Largely replaced by transformers
+    \begin{itemize}
+        \item LSTMs still useful for small datasets (better performance)
+        \item LSTM - Transformer hybrid architectures 
+    \end{itemize} 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Discussion - the Future of LSTMs}
+Future of the LSTM architecture:
+\begin{itemize}
+    \item Largely replaced by transformers
+    \begin{itemize}
+        \item LSTMs still useful for small datasets (better performance)
+        \item LSTM - Transformer hybrid architectures 
+    \end{itemize} 
+    \item Inspired many RNN Architectures
+\end{itemize}
+\end{frame}
+
+%Conclusion
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\end{frame}
+
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+    \item Historically important 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+    \item Historically important 
+    \item Inspired many RNN Architectures
+\end{itemize}
+Currently:
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+    \item Historically important 
+    \item Inspired many RNN Architectures
+\end{itemize}
+Currently:
+\begin{itemize}
+    \item Replaced by transformers
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+    \item Historically important 
+    \item Inspired many RNN Architectures
+\end{itemize}
+Currently:
+\begin{itemize}
+    \item Replaced by transformers
+    \item Development of new LSTM based architectures
+\end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Conclusion}
+LSTM Architecture:
+\begin{itemize}
+    \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory)
+    \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation
+    \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units
+    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem
+    \item Historically important 
+    \item Inspired many RNN Architectures
+\end{itemize}
+Currently:
+\begin{itemize}
+    \item Replaced by transformers
+    \item Development of new LSTM based architectures
+    \item Remain useful in some cases
+\end{itemize}
+\end{frame}
 
 % ----------------------------------------------------------------
-\nocite{DoesNotExist}
+\nocite{alselwi2024lstmfuture}
+\nocite{bolboaca2023lstmperformance}
+\nocite{eck2002musicgeneration}
+\nocite{gers1999forgetgate}
+\nocite{gers2001timeseries}
+\nocite{gokmen2018hadamard}
+\nocite{gradient-clipping}
+\nocite{harris1954languagestructure}
+\nocite{hochreiter1997lstm}
+\nocite{nielsen2024electricitypriceforcasting}
+\nocite{torres2022elctricityforecasting}
+\nocite{zhao2025lstmtransformerhybrid}
+\nocite{zheng2018scalability}
+\nocite{zheng2020scalability}
 
 \setbeamerfont{bibliography item}{size=\footnotesize}
 \setbeamerfont{bibliography entry author}{size=\footnotesize}
