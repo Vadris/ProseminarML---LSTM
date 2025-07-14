@@ -135,11 +135,36 @@ Examples for sequence Data:
 \end{frame}
 
 \begin{frame}[t]{Recap - RNNs}
-    
+\begin{itemize}
+  \item Shared weights across time
+    \pause
+  \item Hidden state $h_t$ holds context
+    \pause
+  \item $h_t=\varphi\!\left(W_h x_t + U_h h_{t-1}+b_h\right)$
+    \pause
+  \item $y_t=\psi\!\left(W_y h_t + b_y\right)$
+    \pause
+  \item Training: Backpropagation Through Time (BPTT)
+\end{itemize}
+\source{Elman 1990; Werbos 1990}
 \end{frame}
 
 \begin{frame}{Recap - Unstable Gradients}
-    
+\begin{itemize}
+ \item BPTT accumulates
+        $\displaystyle\prod_{k=1}^{t}\!\frac{\partial h_k}{\partial h_{k-1}}$
+  \pause
+  \item $\sigma_{\max}<1 \;\Rightarrow\;$ vanishing
+  \pause
+  \item $\sigma_{\max}>1 \;\Rightarrow\;$ exploding
+  \pause
+  \item Vanilla RNNs forget long-range information / become numerically unstable
+  \pause
+  \item Gradient clipping controls explosions
+  \pause
+  \item Vanishing requires an architectural fix
+\end{itemize}
+\source{Hochreiter 1991; Pascanu et al. 2013}
 \end{frame}
 
 % Constant Error Carousel
@@ -617,7 +642,14 @@ Forget Gate:
 \end{frame}
 
 \begin{frame}[t]{LSTM vs Transformers}
-    
+\begin{itemize}
+  \item Computation: serial recurrence \textit{vs.} parallel self-attention
+  \item Long-range handling: gated memory \textit{vs.} direct pairwise links
+  \item Complexity: LSTM $\mathcal{O}(n)$ \quad Transformer $\mathcal{O}(n^{2})$
+  \item Hardware: Transformers saturate GPUs; LSTMs under-utilise
+  \item Data regime: small / streaming $\Rightarrow$ LSTM; large / offline $\Rightarrow$ Transformer
+\end{itemize}
+\source{Vaswani et al. 2017}
 \end{frame}
 
 %LSTM Applications
@@ -929,6 +961,11 @@ Currently:
 \nocite{zhao2025lstmtransformerhybrid}
 \nocite{zheng2018scalability}
 \nocite{zheng2020scalability}
+\nocite{hochreiter1991}
+\nocite{elman90}
+\nocite{werb1990bptt}
+\nocite{pascanu2013rnntraining}
+\nocite{vaswani2017attention}
 
 \setbeamerfont{bibliography item}{size=\footnotesize}
 \setbeamerfont{bibliography entry author}{size=\footnotesize}
