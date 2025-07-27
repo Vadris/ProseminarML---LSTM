@@ -35,10 +35,16 @@
   \end{tikzpicture}
 }
 
+\tikzset{basic/.style={draw,fill=none,
+                       text badly centered,minimum width=3em}}
+\tikzset{input/.style={basic,circle,minimum width=3.5em}}
+\tikzset{weights/.style={basic,rectangle,minimum width=2em}}
+\tikzset{functions/.style={basic,circle, minimum width=3em}}
+
 \title{Long Short-Term Memory}
 \subtitle{Joint Proseminar on Machine Learning and Image Processing}
 \date{\today}
-\author{Fynn Jansen, Leon Benzer}
+\author{Fynn Jansen, Leon Benz}
 \institute{Chair of Computer Science 13 (Computer Vision)\\RWTH Aachen}
 \makeatletter
 \setbeamertemplate{frame footer}{Long Short-Term Memory \hfill Fynn Jansen, Leon Benz, RWTH}
@@ -54,7 +60,7 @@
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item \textbf{Introduction}
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
@@ -118,11 +124,11 @@ Examples for sequence Data:
 
 
 
-% Recap
+% Background
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item \textbf{Recap}
+    \item \textbf{Background}
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
@@ -134,44 +140,243 @@ Examples for sequence Data:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Recap - RNNs}
+
+\begin{frame}[t]{Background – Neural Networks}
 \begin{itemize}
-  \item Shared weights across time
+  \item Artificial neurons: simplified models of biological neurons
     \pause
-  \item Hidden state $h_t$ holds context
+  \item A \textbf{perceptron} computes a weighted sum of inputs:
+    \[
+      y = f\left(\sum_{i=0}^{n}{w_ix_i + b}\right)
+    \]
     \pause
-  \item $h_t=\varphi\!\left(W_h x_t + U_h h_{t-1}+b_h\right)$
-    \pause
-  \item $y_t=\psi\!\left(W_y h_t + b_y\right)$
-    \pause
-  \item Training: Backpropagation Through Time (BPTT)
+  \item Non-linearity introduced via activation function $f$
 \end{itemize}
-\source{Elman 1990; Werbos 1990}
 \end{frame}
 
-\begin{frame}{Recap - Unstable Gradients}
+\begin{frame}[t]{Background - Neural Networks}
+\begin{center}
+\begin{tikzpicture}
+    % Draw input nodes
+    \foreach \h [count=\hi ] in {$x_1$,$x_0$,$1$}{%
+          \node[input] (f\hi) at (0,\hi*1.25cm-1.5 cm) {\h};
+        }
+    % Dot dot dot ... x_n
+    \node[below=0.62cm] (idots) at (f1) {\vdots};
+    \node[input, below=0.62cm] (last_input) at (idots) {$x_n$};
+    % Draw summation node
+    \node[functions] (sum) at (4,0) {\Huge$\sum$};
+    \node[below=0.69cm] at (sum) {$\sum_{i=0}^n w_ix_i + b$};
+    % Draw edges from input nodes to summation node
+    \foreach \h [count=\hi ] in {$w_1$,$w_0$,$b$}{%
+          \path (f\hi) -- node[weights] (w\hi) {\h} (sum);
+          \draw[->] (f\hi) -- (w\hi);
+          \draw[->] (w\hi) -- (sum);
+        }
+    % Dot dot dot ... w_n
+    \node[below=0.05cm] (wdots) at (w1) {\vdots};
+    \node[weights, below=0.45cm] (last_weight) at (wdots) {$w_n$};
+    % Add edges for last node and last weight etc
+    \path[draw,->] (last_input) -- (last_weight);
+    \path[draw,->] (last_weight) -- (sum);
+    % Draw node for activation function
+    \node[functions] (activation) at (7,0) {$f$};
+
+    \draw[->] (sum) -- (activation);
+    \draw[->] (activation) -- ++(1,0);
+    % Labels
+    \node[above=1cm]  at (f3) {inputs};
+    \node[above=1cm] at (w3) {weights};
+    \node[above=1cm] at (activation) {activation function};
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]{Background - Neural Networks}
+
+Perceptrons are combined into multi-layer neural networks (MLPs)
+\begin{center}
+
+\begin{tikzpicture}[
+    neuron/.style={circle, draw=black, minimum size=.8cm},
+    layer/.style={minimum width=2cm, align=center},
+    ->, >=stealth
+  ]
+
+  % Input Layer
+  \node[neuron] (I1) at (0,1) {};
+  \node[neuron] (I2) at (0,0) {};
+  \node[neuron] (I3) at (0,-1) {};
+  \node[below=0.3cm of I3] (ILabel) {Input Layer};
+
+  % Hidden Layer
+  \foreach \i in {1,...,4}
+    \node[neuron] (H\i) at (3, 2.5-\i*1) {};
+
+  \node[below=0.4cm of H4] (HLabel) {Hidden Layer};
+
+  % Output Layer
+  \node[neuron] (O1) at (6,0.5) {};
+  \node[neuron] (O2) at (6,-0.5) {};
+  \node[below=0.3cm of O2] (OLabel) {Output Layer};
+
+  % Connections Input -> Hidden
+  \foreach \i in {1,2,3}
+    \foreach \j in {1,2,3,4}
+      \draw[->] (I\i) -- (H\j);
+
+  % Connections Hidden -> Output
+  \foreach \i in {1,2,3,4}
+    \foreach \j in {1,2}
+      \draw[->] (H\i) -- (O\j);
+
+\end{tikzpicture}
+\end{center}
+\end{frame}
+
+\begin{frame}[t]{Background – Training Neural Networks}
 \begin{itemize}
- \item BPTT accumulates
-        $\displaystyle\prod_{k=1}^{t}\!\frac{\partial h_k}{\partial h_{k-1}}$
+  \item Neural networks learn by minimizing a \textbf{loss function}
+    \pause
+  \item Use \textbf{stochastic gradient descent} (SGD):
+    \[
+      \theta \leftarrow \theta - \eta \nabla_\theta L(\theta)
+    \]
+    \pause
+  \item Gradients are computed using \textbf{backpropagation}
+    \pause
+  \item Works well for fixed-size input/output — not ideal for sequences
+\end{itemize}
+\source{LeCun et al. 1998}
+\end{frame}
+
+\begin{frame}[t]{Background – Recurrent Neural Networks}
+\begin{itemize}
+  \item Designed to process sequences of arbitrary length
+    \pause
+  \item Maintain a \textbf{hidden state} $h_t$ to capture temporal context
+    \pause
+  \item Reuse weights across time steps
+    \pause
+  \item Core equations:
+    \[
+      h_t = \varphi(W_h x_t + U_h h_{t-1} + b_h)
+      \qquad
+      y_t = \psi(W_y h_t + b_y)
+    \]
+    \pause
+\end{itemize}
+\begin{center}
+  \begin{tikzpicture}[>=latex,
+    % styles for clarity
+    input/.style   ={draw, circle, minimum size=8mm},
+    hidden/.style  ={draw, rectangle, rounded corners=2pt, minimum size=8mm},
+    output/.style  ={draw, circle, minimum size=8mm},
+    node distance = 2cm
+  ]
+    \node[input](x) at (0,0) {x};
+    \node[hidden](h) at (2,0) {h};
+    \node[output](o) at (4, 0) {y};
+
+    \draw[->] (x) -- node[above]{$W_h$} (h);
+    \draw[->] (h) -- node[above]{$W_y$} (o);
+    \path
+      (h) edge[->,
+            out=-30,
+            in=-150,
+            looseness=7,
+            loop]
+            node[below]{$U_h$}
+      (h);
+  \end{tikzpicture}
+\end{center}
+\source{Elman 1990}
+\end{frame}
+
+\begin{frame}[t]{Background – Unrolling an RNN}
+\begin{itemize}
+  \item RNNs can be visualized as a sequence of repeated cells
+    \pause
+  \item Each time step processes one input and updates the hidden state
+    \pause
+  \item Hidden state carries memory across time
+\end{itemize}
+\begin{center}
+  \begin{tikzpicture}[>=latex,
+      % styles for clarity
+      input/.style   ={draw, circle, minimum size=8mm},
+      hidden/.style  ={draw, rectangle, rounded corners=2pt, minimum size=8mm},
+      output/.style  ={draw, circle, minimum size=8mm},
+      node distance = 2cm
+    ]
+    \foreach \t [count=\i from 1] in {0,1,2}{
+      % place nodes at (0,-2*\i), (2,-2*\i), (4,-2*\i)
+      \node[input]  (x\i) at (0,-1.5*\i) {$x_{\t}$};
+      \node[hidden] (h\i) at (2,-1.5*\i) {$h_{\t}$};
+      \node[output] (o\i) at (4,-1.5*\i) {$y_{\t}$};
+
+      % input → hidden and hidden → output
+      \draw[->] (x\i) -- node[above] {$W_h$} (h\i);
+      \draw[->] (h\i) -- node[above] {$W_y$} (o\i);
+
+      % hidden_{t–1} → hidden_t for t>0
+      \ifnum\i>1
+        \pgfmathtruncatemacro{\j}{\i-1}
+        \draw[->, out=-20, in=160, looseness=1.5]
+          (h\j) to node[left=.4cm] {$U_h$} (h\i);
+      \fi
+    }
+  \end{tikzpicture}
+  \captionof{figure}{Unrolled Elman RNN for $T=3$.}\label{fig:rnn_unroll}
+\end{center}
+\source{Elman 1990}
+\end{frame}
+
+\begin{frame}[t]{Background – Backpropagation Through Time}
+\begin{itemize}
+  \item To train RNNs, we apply \textbf{Backpropagation Through Time (BPTT)}
+    \pause
+  \item Compute gradients of loss at each time step $t$ w.r.t. previous states
+    \pause
+  \item The gradient of the loss at time $T$ w.r.t. a hidden state $h_t$:
+    \[
+    \frac{\partial \mathcal{L}_T}{\partial h_t} = \sum_{k=t}^T \left( \frac{\partial \mathcal{L}_T}{\partial h_k} \cdot \prod_{j=t+1}^{k} \frac{\partial h_j}{\partial h_{j-1}} \right)
+    \]
+    \pause
+  \item Each $\frac{\partial h_j}{\partial h_{j-1}}$ is a Jacobian matrix
+\end{itemize}
+\source{Werbos 1990; Pascanu et al. 2013}
+\end{frame}
+
+\begin{frame}[t]{Background – Vanishing and Exploding Gradients}
+\begin{itemize}
+  \item When multiplying many Jacobians, gradients can:
+  \begin{itemize}
+    \item \textbf{Shrink rapidly} $\Rightarrow$ vanish
+    \item \textbf{Grow uncontrollably} $\Rightarrow$ explode
+  \end{itemize}
   \pause
-  \item $\sigma_{\max}<1 \;\Rightarrow\;$ vanishing
+  % \item This occurs along the \textbf{diagonal of the product of Jacobians}
+  %   \begin{itemize}
+  %     \item Repeated multiplication emphasizes dominant eigenvalues
+  %   \end{itemize}
+  % \pause
+  \item In practice: RNNs \textbf{forget early inputs} and may become unstable
   \pause
-  \item $\sigma_{\max}>1 \;\Rightarrow\;$ exploding
+  \item \textbf{Gradient clipping} can limit explosion, but not vanishing
   \pause
-  \item Vanilla RNNs forget long-range information / become numerically unstable
-  \pause
-  \item Gradient clipping controls explosions
-  \pause
-  \item Vanishing requires an architectural fix
+  \item → We need an \textbf{architectural solution}
 \end{itemize}
 \source{Hochreiter 1991; Pascanu et al. 2013}
 \end{frame}
+
+
 
 % Constant Error Carousel
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item \textbf{Naive Solution}
     \item LSTM Architecture
     \item Variants
@@ -320,7 +525,7 @@ Conflicting weight update signals for \begin{math}w_{ji}\end{math} \& \begin{mat
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item \textbf{LSTM Architecture}
     \item Variants
@@ -541,7 +746,7 @@ Drawbacks:
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item \textbf{Variants}
@@ -604,12 +809,45 @@ Forget Gate:
 \source{Gers et al. 1999}
 \end{frame}
 
+\begin{frame}[t]{Variants - Bidirectional LSTM}
+\begin{itemize}
+  \item Standard LSTM processes sequence \textbf{left to right}
+    \pause
+  \item Bidirectional LSTM (BiLSTM) runs \textbf{two LSTMs}:
+    \begin{itemize}
+      \item One forward ($\rightarrow$)
+      \item One backward ($\leftarrow$)
+    \end{itemize}
+    \pause
+  \item Output combines both:
+  \[
+    h_t = [\overrightarrow{h}_t; \overleftarrow{h}_t]
+  \]
+    \pause
+\item Can use \textbf{past and future} context → better performance in many NLP tasks
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[t]{Variants - Bidirectional LSTM}
+\begin{center}
+\includegraphics[width=0.7\linewidth]{images/brnn.png}
+\end{center}
+% \begin{itemize}
+%   \item Input sequence flows through both directions
+%     \pause
+%   \item Outputs are concatenated or summed
+%     \pause
+%   \item Common in e.g. Speech, NER, Translation
+% \end{itemize}
+\source{Graves \& Schmidhuber 2005}
+\end{frame}
 
 %GRU
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
@@ -621,15 +859,57 @@ Forget Gate:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{GRU}
+\begin{frame}[t]{Gated Recurrent Unit}
+\begin{itemize}
+  \item GRU is a \textbf{simplified version of LSTM} with fewer gates
+  \pause
+  \item Uses:
+    \begin{itemize}
+      \item an \textbf{update gate} → controls how much past info to keep
+      \item a \textbf{reset gate} → controls how much past info to forget
+    \end{itemize}
+  \pause
+  \item Learns to balance:
+    \begin{itemize}
+      \item remembering important past features
+      \item reacting to new input
+    \end{itemize}
+  \pause
+  \item Often performs well with:
+    \begin{itemize}
+      \item less data
+      \item shorter sequences
+      \item faster training needs
+    \end{itemize}
+\end{itemize}
+\source{Cho et al. 2014}
+\end{frame}
 
+\begin{frame}[t]{GRU vs. LSTM}
+\begin{itemize}
+  \item \textbf{LSTM}
+  \begin{itemize}
+    \item Uses a separate memory cell \( c_t \)
+    \item Has input and output gates (forget gate was added later)
+    \item Two internal states: \( h_t \) and \( c_t \)
+  \end{itemize}
+  \pause
+  \item \textbf{GRU}
+  \begin{itemize}
+    \item Merges cell and hidden state into a single \( h_t \)
+    \item Uses update and reset gates
+    \item Simpler architecture, faster training
+  \end{itemize}
+\end{itemize}
+\vspace{1em}
+\textit{GRU simplifies LSTM by merging its memory and control into fewer components.}
 \end{frame}
 
 % LSTM vs Transformer
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
@@ -641,22 +921,101 @@ Forget Gate:
 \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{LSTM vs Transformers}
+
+\begin{frame}[t]{LSTM vs. Transformer – Motivation}
 \begin{itemize}
-  \item Computation: serial recurrence \textit{vs.} parallel self-attention
-  \item Long-range handling: gated memory \textit{vs.} direct pairwise links
-  \item Complexity: LSTM $\mathcal{O}(n)$ \quad Transformer $\mathcal{O}(n^{2})$
-  \item Hardware: Transformers saturate GPUs; LSTMs under-utilise
-  \item Data regime: small / streaming $\Rightarrow$ LSTM; large / offline $\Rightarrow$ Transformer
+  \item LSTMs have been widely used for sequence modeling since the 1990s
+    \pause
+  \item In recent years, \textbf{Transformers} have become the dominant model in NLP and beyond
+    \pause
+  \item Transformers offer a different approach: no recurrence, full attention
 \end{itemize}
 \source{Vaswani et al. 2017}
+\end{frame}
+
+\begin{frame}[t]{Transformers – Self-Attention Mechanism}
+\begin{itemize}
+  \item Core idea: Each word \textbf{attends to all others} in the input
+    \pause
+  \item Use \textbf{self-attention} to compute weighted combinations of all inputs
+    \pause
+  \item Attention weights learned dynamically — no recurrence
+    \pause
+  \item Enables \textbf{parallelization} and efficient learning of long-range dependencies
+\end{itemize}
+\pause
+\begin{center}
+\begin{tikzpicture}[node distance=0.8cm and 0.5cm, every node/.style={font=\small}, >=latex]
+
+  % Tokens
+  \node (t1) [draw, minimum height=0.8cm, minimum width=1.3cm] {The};
+  \node (t2) [draw, right=of t1, minimum height=0.8cm, minimum width=1.3cm] {cat};
+  \node (t3) [draw, right=of t2, minimum height=0.8cm, minimum width=1.3cm] {sits};
+  \node (t4) [draw, right=of t3, minimum height=0.8cm, minimum width=1.3cm] {on};
+  \node (t5) [draw, right=of t4, minimum height=0.8cm, minimum width=1.3cm] {the};
+  \node (t6) [draw, right=of t5, minimum height=0.8cm, minimum width=1.3cm] {mat};
+  \node (t7) [draw, right=of t6, minimum height=0.8cm, minimum width=1.3cm] {and};
+  \node (t8) [draw, fill=blue!15, right=of t7, minimum height=0.8cm, minimum width=1.3cm] {is};
+
+  % Attention arcs (thickness represents attention weight)
+  \draw[->, line width=0.4pt] (t8.north) to[out=105, in=75, looseness=0.55] (t1.north);
+  \draw[->, line width=0.6pt] (t8.north) to[out=108, in=72, looseness=0.5] (t2.north);
+  \draw[->, line width=1.4pt] (t8.north) to[out=111, in=69, looseness=0.45] (t3.north); % highest attention
+  \draw[->, line width=0.6pt] (t8.north) to[out=114, in=66, looseness=0.42] (t4.north);
+  \draw[->, line width=0.3pt] (t8.north) to[out=117, in=63, looseness=0.40] (t5.north); % lowest attention
+  \draw[->, line width=0.6pt] (t8.north) to[out=120, in=60, looseness=0.38] (t6.north);
+  \draw[->, line width=1.0pt] (t8.north) to[out=123, in=57, looseness=0.35] (t7.north);
+
+\end{tikzpicture}
+\end{center}
+\source{Vaswani et al. 2017}
+\end{frame}
+
+\begin{frame}[t]{LSTM vs. Transformer – Comparison}
+\vspace{1em}
+\begin{columns}
+\column{0.45\textwidth}
+\textbf{LSTM}
+\begin{itemize}
+  \item Recurrence-based
+  \item Hidden state carries memory
+  \item Sequential processing
+  \item Better on smaller data
+  \item Fewer resources needed
+\end{itemize}
+
+\column{0.45\textwidth}
+\textbf{Transformer}
+\begin{itemize}
+  \item Attention-based
+  \item Global context at each step
+  \item Fully parallelizable
+  \item Excels with large datasets
+  \item High compute demand
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[t]{Are LSTMs Obsolete?}
+\begin{itemize}
+  \item Transformers dominate in NLP and vision — but not a full replacement
+    \pause
+  \item LSTMs still useful when:
+    \begin{itemize}
+      \item Data is limited or streaming
+      \item Resources are constrained
+    \end{itemize}
+    \pause
+  \item Some hybrid models combine both (e.g., LSTM-Transformer)
+\end{itemize}
+\source{Zhao et al. 2025}
 \end{frame}
 
 %LSTM Applications
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
@@ -667,6 +1026,26 @@ Forget Gate:
     \item Conclusion
 \end{itemize}
 \end{frame}
+
+\begin{frame}[t]{Application – Speech Recognition}
+\begin{itemize}
+  \item Spoken language is a sequence of sounds that unfolds over time
+  \pause
+  \item LSTMs can learn how current sounds depend on earlier ones:
+    \begin{itemize}
+      \item e.g. understanding that "s" at the end of “cats” depends on earlier phonemes
+    \end{itemize}
+  \pause
+  \item Bidirectional LSTMs are especially useful:
+    \begin{itemize}
+      \item They consider both past and future context in a sentence
+      \item This helps distinguish similar sounds in different contexts
+    \end{itemize}
+  \pause
+  \item LSTMs reduce the need for manual feature extraction
+\end{itemize}
+\end{frame}
+
 %Time Series Forecasting
 \begin{frame}[t]{Applications - Time Series Forecasting}
 LSTMs perform better on:
@@ -775,7 +1154,7 @@ Easily representable as numbers\\
 \begin{frame}[t]{Contents}
 \begin{itemize}
     \item Introduction
-    \item Recap
+    \item Background
     \item Naive Solution
     \item LSTM Architecture
     \item Variants
