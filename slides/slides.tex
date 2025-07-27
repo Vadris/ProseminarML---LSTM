@@ -72,19 +72,16 @@
 \end{frame}
 
 %Introduciton
-\begin{frame}{Introduction - }
-    
-\end{frame}
-
 \begin{frame}[t]{Introduction - The importance of Sequence Data}
-Examples for sequence Data: \pause
+Real world data often best described by sequences: \pause
 \begin{itemize}
     \item Language \pause
     \item Music \& Audio \pause
     \item (Stock) prices \pause
     \item Weather \pause
 \end{itemize}
-\begin{math}\implies\end{math} Real world data often best described by sequences
+Recurrent Neural Networks: Pick up on patterns in sequences\pause \\
+In practice: Difficult to train 
 \end{frame}
 
 % Background
@@ -331,8 +328,6 @@ Perceptrons are combined into multi-layer neural networks (MLPs)
 \source{Hochreiter 1991; Pascanu et al. 2013}
 \end{frame}
 
-
-
 % Constant Error Carousel
 \begin{frame}[t]{Contents}
 \begin{itemize}
@@ -349,7 +344,8 @@ Perceptrons are combined into multi-layer neural networks (MLPs)
 \end{frame}
 
 \begin{frame}[t]{Naive Solution - Constant Error Flow}
-    Single Unit (\begin{math}j\end{math}) Constant Error Carousel:\pause
+    \source{Hochreiter et al. 1997}
+    Single Unit (\begin{math}j\end{math}) Constant Error Carousel (CEC):\pause
     \begin{itemize}
         \item Linear activation function : \begin{math}f(x)=x\end{math} \pause
         \item Feedback connection weight : \begin{math}w_{jj}=1\end{math} \pause
@@ -358,10 +354,11 @@ Perceptrons are combined into multi-layer neural networks (MLPs)
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
     \end{figure}
-    \source{Hochreiter et al. 1997}
+    
 \end{frame}
 
 \begin{frame}[t]{Naive Solution - Problems}
+\source{Hochreiter et al. 1997}
 \begin{figure}
         \centering
         \includegraphics[width=0.25\linewidth]{images/ConstantErrorCarousel.png}
@@ -373,7 +370,7 @@ Connected to other units: \pause
     \item Output to unit $k$\pause $\implies$ Single weight \begin{math}w_{kj}\end{math} for controlling retrieval \pause
 \end{itemize}
 Conflicting weight update signals for \begin{math}w_{ji}\end{math} \& \begin{math}w_{kj}\end{math}\pause\begin{math}\implies\end{math} Mechanism for storage and retrieval
-\source{Hochreiter et al. 1997}
+
 \end{frame}
 
 % LSTM Architecture
@@ -392,37 +389,51 @@ Conflicting weight update signals for \begin{math}w_{ji}\end{math} \& \begin{mat
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Gate Unit}
+\source{Hochreiter et al. 1997}
 Idea: Restrict flow based on context \pause
 \begin{figure}
     \centering
     \includegraphics[width=0.2\linewidth]{images/GateUnit.png}
 \end{figure} \pause
+Control Input: $y^{in_j}$ \pause\\
 Input gets scaled by number computed from context
-\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Memory Cell}
+\source{Hochreiter et al. 1997}
 Memory Cell: CEC unit with input and output gate units \pause
 \begin{figure}
     \centering
     \includegraphics[width=1\linewidth]{images/LSTM-Cell-Diagram.png}
 \end{figure}
-\source{Hochreiter et al. 1997}
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Network Topology}
-Input for cell and gate units can be: \pause
+Input for cell and gate units depend on specific implementation \pause\\
+They can be:\pause
 \begin{itemize}
     \item Input Units \pause
     \item Gate Units \pause
     \item Memory Cells \pause
     \item Conventional Hidden Units \pause
 \end{itemize}
-Commonly used topology: Inputs for Cell \& Gate are all input units \& memory cell outputs \pause
+Commonly used topology: Inputs for Cell & Gate are all input units & memory cell outputs \pause\\
 Input Gate:  \begin{math}i_t=\sigma_i\left(U_{i}h_{t-1}+W_{i} x_t + b_i\right)\end{math}\pause\\
 Output Gate: \begin{math}o_t=\sigma_o\left(U_{o}h_{t-1}+W_{o}x_t + b_o\right)\end{math}\pause\\
 Internal State: \begin{math}C_t=C_{t-1}+i_t\odot\sigma_c\left(U_{c}h_{t-1}+W_{x}x_t + b_c\right)\end{math}\pause\\
 Output: \begin{math}h_t=o_t\odot\sigma_h\left(C_t\right)\end{math}
+\end{frame}
+
+\begin{frame}[t]{LSTM Architecture - Results}
+LSTMs outperform classical RNNs in many ways:\pause
+\begin{itemize}
+    \item Less training examples needed\pause
+    \item Higher success rate \pause
+    \item Better performance on sequences that include random data \pause
+    \item Better performance on noisy data \pause
+    \item Can solve tasks RNNs previously could not (sequences with no local regularities)
+\end{itemize}
+
 \end{frame}
 
 \begin{frame}[t]{LSTM Architecture - Limitations}
@@ -433,7 +444,7 @@ Drawbacks: \pause
     \item Limited GPU Utilization \pause
     \item Memory Bottlenecks \pause
     \item Worse performance on short sequences \pause
-    \item State can not be reset \pause
+    \item State can not be reset
 \end{itemize}
 \end{frame}
 
@@ -453,14 +464,24 @@ Drawbacks: \pause
 \end{frame}
 
 \begin{frame}[t]{Variants - LSTM with forget gate}
+\source{Gers et al. 1999}
 Forget Gate: \pause
 \begin{itemize}
     \item "Forgetting" by resetting state \pause
     \item Achieved by gating the previous state \pause
     \item \begin{math}f_t=\sigma_i\left(U_{f}h_{t-1}+W_{f} x_t + b_f\right)\end{math} \pause
-    \item \begin{math}C_t=f_t\odot C_{t-1}+i_t\odot\sigma_c\left(U_{c}h_{t-1}+W_{x}x_t + b_c\right)\end{math} \pause
+    \item \begin{math}C_t=f_t\odot C_{t-1}+i_t\odot\sigma_c\left(U_{c}h_{t-1}+W_{x}x_t + b_c\right)\end{math}
 \end{itemize}
-\source{Gers et al. 1999}
+
+
+\end{frame}
+
+\begin{frame}[t]{Variants - LSTM with forget gate}
+    \begin{figure}
+        \centering
+        \includegraphics[\linewidth]{images/Structure-of-LSTM-cell-which-introduces-three-special-gates-Input-Gate-i-Forget-Gate.png}
+    \end{figure}
+\source{Nguyen et al. 2022}
 \end{frame}
 
 \begin{frame}[t]{Variants - Bidirectional LSTM}
@@ -632,21 +653,6 @@ Forget Gate: \pause
 \end{columns}
 \end{frame}
 
-\begin{frame}[t]{Are LSTMs Obsolete?}
-\begin{itemize}
-  \item Transformers dominate in NLP and vision — but not a full replacement
-    \pause
-  \item LSTMs still useful when:
-    \begin{itemize}
-      \item Data is limited or streaming
-      \item Resources are constrained
-    \end{itemize}
-    \pause
-  \item Some hybrid models combine both (e.g., LSTM-Transformer)
-\end{itemize}
-\source{Zhao et al. 2025}
-\end{frame}
-
 %LSTM Applications
 \begin{frame}[t]{Contents}
 \begin{itemize}
@@ -691,7 +697,7 @@ LSTMs perform better on: \pause
 Examples: \pause
 \begin{itemize}
     \item 2022: Deep LSTM Network forecasts electricity demand (1.5\% accuracy) \pause
-    \item 2024: LSTM Architecture forcasts electricity prices \pause
+    \item 2024: LSTM Architecture forcasts electricity prices
 \end{itemize}
 \end{frame}
 
@@ -705,7 +711,8 @@ Music has temporal structure: \pause
     \item Melodic motives \pause
 \end{itemize}
 Easily representable as numbers\pause \\
-2002: LSTM Architecture used to compose music \pause
+\vspace{1em}
+2002: LSTM Architecture used to compose music
 \end{frame}
 
 %Discussion
@@ -724,15 +731,18 @@ Easily representable as numbers\pause \\
 \end{frame}
 
 \begin{frame}[t]{Discussion - the Future of LSTMs}
+\source{Zhao et al. 2025}
 Future of the LSTM architecture: \pause
 \begin{itemize}
-    \item Largely replaced by transformers \pause
+    \item Largely replaced by transformers in NLP and vision, but: \pause
     \begin{itemize}
         \item LSTMs still useful for small datasets (better performance) \pause
+        \item LSTMs require fewer Resources \pause
         \item LSTM - Transformer hybrid architectures \pause
     \end{itemize} 
-    \item Inspired many RNN Architectures \pause
+    \item Inspired many Variants and Architecture
 \end{itemize}
+
 \end{frame}
 
 %Conclusion
@@ -756,13 +766,12 @@ LSTM Architecture: \pause
     \item Internal CEC unit \begin{math}\implies \end{math} Internal State (Memory) \pause
     \item Input Gate \begin{math}\implies\end{math} Protects memory from unwanted perturbation \pause
     \item Output Gate \begin{math}\implies\end{math} Controls output of the memory to other units \pause
-    \item \begin{math}\implies\end{math} Eliminates vanishing Gradient Problem \pause
-    \item Historically important \pause
-    \item Inspired many RNN Architectures \pause
+    \item Eliminates vanishing Gradient Problem \pause
+    \item Inspired many Variants and RNN Architectures \pause
 \end{itemize}
 Currently: \pause
 \begin{itemize}
-    \item Replaced by transformers \pause
+    \item Replaced by transformers in many Applications \pause
     \item Development of new LSTM based architectures \pause
     \item Remain useful in some cases 
 \end{itemize}
