@@ -549,3 +549,61 @@ ISSN = {2227-7390},
 ABSTRACT = {Amidst global economic fluctuations and escalating geopolitical risks, gold futures, as a pivotal safe-haven asset, demonstrate price dynamics that directly impact investor decision-making and risk mitigation effectiveness. Traditional forecasting models face significant limitations in capturing long-term trends, addressing abrupt volatility, and mitigating multi-source noise within complex market environments characterized by nonlinear interactions and extreme events. Current research predominantly focuses on single-model approaches (e.g., ARIMA or standalone neural networks), inadequately addressing the synergistic effects of multimodal market signals (e.g., cross-market index linkages, exchange rate fluctuations, and policy shifts) and lacking the systematic validation of model robustness under extreme events. Furthermore, feature selection often relies on empirical assumptions, failing to uncover non-explicit correlations between market factors and gold futures prices. A review of the global literature reveals three critical gaps: (1) the insufficient integration of temporal dependency and global attention mechanisms, leading to imbalanced predictions of long-term trends and short-term volatility; (2) the neglect of dynamic coupling effects among cross-market risk factors, such as energy ETF-metal market spillovers; and (3) the absence of hybrid architectures tailored for high-frequency noise environments, limiting predictive utility for decision support. This study proposes a three-stage LSTM–Transformer–XGBoost fusion framework. Firstly, XGBoost-based feature importance ranking identifies six key drivers from thirty-six candidate indicators: the NASDAQ Index, S&P 500 closing price, silver futures, USD/CNY exchange rate, China’s 1-year Treasury yield, and Guotai Zhongzheng Coal ETF. Second, a dual-channel deep learning architecture integrates LSTM for long-term temporal memory and Transformer with multi-head self-attention to decode implicit relationships in unstructured signals (e.g., market sentiment and climate policies). Third, rolling-window forecasting is conducted using daily gold futures prices from the Shanghai Futures Exchange (2015–2025). Key innovations include the following: (1) a bidirectional LSTM–Transformer interaction architecture employing cross-attention mechanisms to dynamically couple global market context with local temporal features, surpassing traditional linear combinations; (2) a Dynamic Hierarchical Partition Framework (DHPF) that stratifies data into four dimensions (price trends, volatility, external correlations, and event shocks) to address multi-driver complexity; (3) a dual-loop adaptive mechanism enabling endogenous parameter updates and exogenous environmental perception to minimize prediction error volatility. This research proposes innovative cross-modal fusion frameworks for gold futures forecasting, providing financial institutions with robust quantitative tools to enhance asset allocation optimization and strengthen risk hedging strategies. It also provides an interpretable hybrid framework for derivative pricing intelligence. Future applications could leverage high-frequency data sharing and cross-market risk contagion models to enhance China’s influence in global gold pricing governance.},
 DOI = {10.3390/math13101551}
 }
+
+@article{firouzjaee2024interpret,
+author = {Firouzjaee, Javad T. and Khalilian, Pouriya},
+title = {The Interpretability of LSTM Models for Predicting Oil Company Stocks: Impact of Correlated Features},
+journal = {International Journal of Energy Research},
+volume = {2024},
+number = {1},
+pages = {5526692},
+doi = {https://doi.org/10.1155/2024/5526692},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1155/2024/5526692},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1155/2024/5526692},
+abstract = {Oil companies are among the largest companies in the world whose economic indicators in the global stock market have a great impact on the world economy (Stevens, 2018) and market due to their relation to gold (Aijaz et al., 2016), crude oil (Henriques \& Sadorsky, 2008), and the dollar (Huang et al., 1996). This study investigates the impact of correlated features on the interpretability of long short-term memory (LSTM) (Peters, 2001) models for predicting oil company stocks. To achieve this, we designed a standard long short-term memory (LSTM) network and trained it using various correlated data sets. Our approach is aimed at improving the accuracy of stock price prediction by considering the multiple factors affecting the market, such as crude oil prices, gold prices, and the US dollar. The results demonstrate that adding a feature correlated with oil stocks does not improve the interpretability of LSTM models. These findings suggest that while LSTM models may be effective in predicting stock prices, their interpretability may be limited. Caution should be exercised when relying solely on LSTM models for stock price prediction as their lack of interpretability may make it difficult to fully understand the underlying factors driving stock price movements. We have employed complexity analysis to support our argument, considering that financial markets encompass a form of physical complex system (Peters, 2001). One of the fundamental challenges faced in utilizing LSTM models for financial markets lies in interpreting the unexpected feedback dynamics within them.},
+year = {2024}
+}
+
+@INPROCEEDINGS{kinoyama2021overfitting,
+  author={Kinoyama, Rikitaka and Perez, Edgar Ademir Morales and Iba, Hitoshi},
+  booktitle={2021 10th International Congress on Advanced Applied Informatics (IIAI-AAI)}, 
+  title={Preventing Overfitting of LSTMs using Ant Colony Optimization}, 
+  year={2021},
+  volume={},
+  number={},
+  pages={343-350},
+  keywords={Training;Backpropagation;Ant colony optimization;Neurons;Training data;Prediction algorithms;Task analysis;long short-term memory;ant colony optimization;neuro-evolution;time-series prediction;overfitting},
+  doi={10.1109/IIAI-AAI53430.2021.00061}}
+
+@article{smagulova2019notation,
+author = {Smagulova, Kamilya and James, A.},
+year = {2019},
+month = {05},
+pages = {},
+title = {A survey on LSTM memristive neural network architectures and applications},
+volume = {228},
+journal = {The European Physical Journal Special Topics},
+doi = {10.1140/epjst/e2019-900046-x}
+}
+
+@misc{real-pytorch-lstm,
+    author={pytorch},
+    title={LSTM from scratch},
+    howpublished={\url{https://github.com/pytorch/pytorch/blob/main/aten/src/ATen/native/vulkan/ops/Lstm.cpp}},
+    note={Accessed: August 2025},
+    year={2025}
+}
+
+@article{qiu2022onehot,
+title = {Adversarial attack and defense technologies in natural language processing: A survey},
+journal = {Neurocomputing},
+volume = {492},
+pages = {278-307},
+year = {2022},
+issn = {0925-2312},
+doi = {https://doi.org/10.1016/j.neucom.2022.04.020},
+url = {https://www.sciencedirect.com/science/article/pii/S0925231222003861},
+author = {Shilin Qiu and Qihe Liu and Shijie Zhou and Wen Huang},
+keywords = {Textual adversarial example, Adversarial attack, Adversarial defense, Natural language processing, Artificial intelligence},
+abstract = {Recently, the adversarial attack and defense technology has made remarkable achievements and has been widely applied in the computer vision field, promoting its rapid development in other fields, primarily the natural language processing domain. However, discrete semantic texts bring additional restrictions and challenges to successfully implementing adversarial attacks and defenses. This survey systematically summarizes the current progress of adversarial techniques in the natural language processing field. We first briefly introduce the textual adversarial example’s particularity, vectorization, and evaluation metrics. More importantly, we categorize textual adversarial attacks according to the combination of semantic granularity and example generation strategy. Next, we present commonly used datasets and adversarial attack applications in diverse natural language processing tasks. Besides, we classify defense strategies as passive and active methods considering both input data and victim models. Finally, we present several challenging issues and future research directions in this domain.}
+}
