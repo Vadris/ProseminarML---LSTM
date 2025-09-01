@@ -198,7 +198,7 @@ provide a complete but rather shallow introduction into the foundations of neura
     \node[above=1cm] at (activation) {activation function};
 \end{tikzpicture}
 
-\captionof{figure}{A single Perceptron}
+\captionof{figure}{Conceptual visualization of a single perceptron, showing weighted inputs, a bias term, and an activation function.}
 \label{fig:perceptron}
 
 \end{center}
@@ -214,24 +214,25 @@ y=f\bigl(\sum_{i=0}^{n}w_i x_i + b\bigr)
 $$
 
 
-The figure \ref{fig:perceptron} shows such a perceptron.
+The Figure \ref{fig:perceptron} shows such a perceptron.
 A single basic Perceptron on its own is not particularly useful as
-it only models linear decision boundaries and cannot learn the xor function \cite{MinskyPapert69}.
+it only models linear decision functions and therefore cannot learn the xor function \cite{MinskyPapert69}.
 
 First we stack multiple Perceptrons to construct a layer. A layer has multiple
 Perceptrons which calculate their output value with their own weights and biases on the same input values, which results
 in as many output values as there are Perceptrons in the layer. Now one can construct a network which chains
-multiple layers after each other, which results in a multilayer Perceptron (MLP), which is also known as a fully connected
+multiple layers after each other, which results in a multilayer Perceptron (MLP) \cite{Rumelhart86}, which is also known as a fully connected
 feed forward network, as each layer is fully connected to the next layer in that each perceptron in layer $i$ 
 is connected to each perceptron in layer $i+1$. The information strictly flows from input layer, through
 intermediate hidden layers to the output layer, without any loops.
 Mathematically a feed forward neural network, with $L$ layers and $0 < l \leq L$ can be described by
 
-$$\mathbf{y}^{(l)} = f^{(l)}(\mathbf{W}^{(l)}\mathbf{y}^{(l-1)}+\mathbf{b}^{(l)})$$
+$$\mathbf{y}^{(l)} = f^{(l)}(\mathbf{W}^{(l)}\mathbf{y}^{(l-1)}+\mathbf{b}^{(l)})\text{,}$$
 
 where $\mathbf{W}^{(l)}$ represents the weight matrix of layer $l$, $\mathbf{b}^{(l)}$ the bias vector of layer $l$,
 $\mathbf{y}^{(l-1)}$ the output vector of the previous layer or in case of $l=0$ the input vector
-and $f^{(l)}$ is the activation function applied element-wise. \\
+and $f^{(l)}$ is the activation function applied element-wise. 
+This is essentially a stacked version of the perceptron formula.\\
 
 
 Now the choice of the activation function is very important, when using a multilayer Perceptron as when a linear activation function like the 
@@ -245,15 +246,7 @@ cheap as its being run many times during a forward pass. \\
 With loss functions the performance of a neural network on a given input can be computed by comparing the desired output with the 
 predicted output of the model. Using loss functions we can quantify the error in the prediction of the neural network, which 
 is a metric we can optimize for. There are again many options for choosing a loss function but it heavily depends on the nature of the
-problem you're trying to solve by using a model: either classification or regression. A common loss function to use when trying to optimize 
-regression tasks is the Mean Squared Error (MSE) \cite{Goodfellow16}:
-
-$$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = \frac{1}{n}\sum^n_{i=1}{(y_i-\hat{y}_i)^2}$$
-
-where $\mathbf{y}$ is the prediction of the model and $\mathbf{\hat{y}}$ the ground truth. When solving classification tasks the Cross Entropy Loss function is often used \cite{Goodfellow16}:
-
-
-$$\mathcal{L}(\mathbf{y},\mathbf{\hat{y}}) = -\sum^n_{i=1}{y_i\log(\hat{y}_i)}$$
+problem you're trying to solve.
 
 With loss functions we have a metric to optimize against, which can be used in an optimization algorithm called 
 gradient descent. It will minimize the loss function by iteratively computing the error gradient and updating
@@ -273,6 +266,8 @@ the same size. Now we only average the gradient for all samples inside the batch
 To actually calculating the gradient the backpropagation algorithm is used. First we take out input data and do the
 forward pass to compute the predictions. We can then calculate the loss by comparing the prediction to the desired result.
 Now the idea behind backpropagation is to calculate the influence of the change weights and biases to the change in loss \cite{Rumelhart86}.
+To achieve that, we use the chain rule of calculus, which allows us to compute how changes in weights and biases
+propagate through the layers of the network.
 Mathematically this is represented by:
 
 
@@ -302,7 +297,7 @@ neural networks (RNNs). Recurrent neural networks accomplish that by carrying a 
   ]
     \node[input](x) at (0,0){x};
     \node[hidden](h) at (2,0) {h};
-    \node[output](o) at (4, 0) {o};
+    \node[output](o) at (4, 0) {y};
 
     \draw[->] (x) -- node[above]{$W_h$} (h);
     \draw[->] (h) -- node[above]{$W_y$} (o);
@@ -315,23 +310,23 @@ neural networks (RNNs). Recurrent neural networks accomplish that by carrying a 
             node[below]{$U_h$}
       (h);
   \end{tikzpicture}
-  \captionof{figure}{Simple RNN with one hidden layer} 
+  \captionof{figure}{A simple RNN cell with one hidden layer. The hidden state $h_t$ is computed from the current input $x_t$ and the previous hidden state $h_{t-1}$, and then mapped to the output $y_t$.}
   \label{fig:rnn}
 \end{center}
 
 The RNN Cell is very similar to the Perceptron. It weights, biases and an activation function. Additionally 
-it has a recurrent connection to itself: the output of a rnn cell at timestep $t$ is feed back to itself at timestep
-$t+1$ multiplied by its own weight. That output value is called the hidden state $h_t$ of an rnn cell.
+it has a recurrent connection to itself: the output of a RNN cell at timestep $t$ is feed back to itself at timestep
+$t+1$ multiplied by its own weight. That output value is called the hidden state $h_t$ of an RNN cell.
 Figure \ref{fig:rnn} depicts a RNN cell with one hidden layer.
-A Elman RNN is described by the forward state update and output projection \cite{Elman90}:
+An Elman RNN is described by the forward state update and output projection \cite{Elman90}:
 
 $$
 h_t = \phi\!\bigl(W_h x_t + U_h h_{t-1} + b_h\bigr), \quad
 y_t = \psi\!\bigl(W_y h_t + b_y\bigr).
 $$
-which can be understood as a neural network with fully connected input and output layers together with a hidden rnn layer.
+which can be understood as a neural network with fully connected input and output layers together with a hidden RNN layer.
 The forward state update projection $h_t$ is similar to the perceptron where $b_h$ represents the bias, $W_h$ the weights,
-with the addition of the term $U_hh_{t-1}$. $h_{t-1}$ is the hidden state of the last iteration and $U_h$ is the weight
+with the addition of the term $U_hh_{t-1}$, where $h_{t-1}$ is the hidden state of the last iteration and $U_h$ is the weight
 matrix for the hidden state. Typically that output is then feed though a fully connected output layer map the
 potentially high dimensional hidden state into the output space.\\
 
@@ -354,7 +349,7 @@ Figure~\ref{fig:rnn_unroll} depicts the unrolled network for $T=3$.
       % place nodes at (0,-2*\i), (2,-2*\i), (4,-2*\i)
       \node[input]  (x\i) at (0,-2*\i) {$x_{\t}$};
       \node[hidden] (h\i) at (2,-2*\i) {$h_{\t}$};
-      \node[output] (o\i) at (4,-2*\i) {$o_{\t}$};
+      \node[output] (o\i) at (4,-2*\i) {$y_{\t}$};
 
       % input → hidden and hidden → output
       \draw[->] (x\i) -- node[above] {$W_h$} (h\i);
@@ -368,7 +363,7 @@ Figure~\ref{fig:rnn_unroll} depicts the unrolled network for $T=3$.
       \fi
     }
   \end{tikzpicture}
-  \captionof{figure}{Unrolled Elman RNN for $T=3$.}\label{fig:rnn_unroll}
+  \captionof{figure}{An Elman RNN unrolled over $T=3$ time steps. Each copy of the RNN cell shares the same weights but processes a different input $x_t$, producing hidden states $h_t$ and outputs $y_t$.}\label{fig:rnn_unroll}
 \end{center}
 
 
@@ -583,7 +578,7 @@ The addition of a forget gate is very common, and many implementations of LSTMs 
 \begin{figure}[h!]
     \centering
     \includegraphics[height=7.5cm]{brnn.png}
-    \caption{Unrolled bidirectional recurrent network\\ Source: \cite{graves2013speechrecognitiondeeprecurrent}}
+    \caption{Unrolled bidirectional recurrent network. The forward hidden states $\overrightarrow{h_t}$ process the sequence in temporal order, while the backward hidden states $\overleftarrow{h_t}$ process it in reverse. Their outputs are concatenated to form the final representation.\\ Source: \cite{graves2013speechrecognitiondeeprecurrent}}
     \label{fig:brnn}
 \end{figure}
 
@@ -591,7 +586,7 @@ Building upon bidirectional RNN \cite{Schuster97} the bidirectional LSTM process
 forward direction but also in the backward direction. It has 2 lstm layers where one is processing the forward direction
 and the other the backward direction. The final representation consists of the outputs of the 2 layers which are then merged together,
 usually concatenation is used. In the final encoding both information about the past and the future are embedded \cite{Graves05}.\\
-Figure \ref{fig:brnn} shows a bidirectional rnn with 2 recurrent layers. The first layer $\overrightarrow{h}_t$ processes
+Figure \ref{fig:brnn} shows a bidirectional RNN with 2 recurrent layers. The first layer $\overrightarrow{h}_t$ processes
 the input in the forward direction while the second layer $\overleftarrow{h}_t$ in the backward direction.
 
 
@@ -604,15 +599,18 @@ The Transformer architecture relies on the attention mechanism as introduced in 
 The main difference is that the recurrent update used by LSTM networks is replaced by a self-attention mechanism \cite{vaswani2017attention}.\\
 
 
-First, each input sequence is mapped to learned token embeddings and positional encodings. Positional encoding 
-inject order information about where a token is inside of a sequence of tokens inside its token representation instead of in the architecture of the model as in RNNs.
+First, each input sequence is mapped to learned token embeddings and positional encodings,
+where a token denotes a basic unit of input such as a word or subword in natural language.
+Positional encoding inject order information about where a token is inside of a sequence of tokens inside
+its token representation instead of in the architecture of the model as in RNNs.
 
 
 The next innovation sparked by transformers was self-attention. Self-attention lets the model assign learned weights to the influence of every token on every other token.
-When predicting the next token in sequence some tokens capture more semantic meaning than others and theise will be highlighted for the neural network by the 
+When predicting the next token in sequence some tokens capture more semantic meaning than others and these will be highlighted for the neural network by the 
 attention mechanism. The attention is learned by the transformer in the training process \cite{vaswani2017attention}.
-The computational and memory cost of self-attention as presentend in \cite{vaswani2017attention} is $\mathcal{O}(n^2)$. Though there are efforts
-to optimize the self attention mechanism to reduce its complexity to $\mathcal{O}(n)$. \cite{katharopoulos2020transformersrnnsfastautoregressive}
+The computational and memory cost of self-attention as presentend in \cite{vaswani2017attention} is $\mathcal{O}(n^2)$,
+where $n$ is the length of the input sequence.
+Though there are efforts to optimize the self attention mechanism to reduce its complexity to $\mathcal{O}(n)$. \cite{katharopoulos2020transformersrnnsfastautoregressive}
 
 
 While LSTM networks propagate past information by passsing the hidden state into the next iteration, transformers attend to the entire input sequence in every
@@ -637,9 +635,9 @@ This Section will highlight some of the most important applications of LSTM Netw
 
 We have already established that LSTM networks are great at working with sequence data. One example where LSTM networks
 have been successfully used is speech recognition \cite{Graves04}. The LSTM network learns temporal patterns in audio and captures long 
-term relationships. They have achieved state of the art results in a paper by Google in 2014 \cite{sak2014longshorttermmemorybased}.
-Researchers at google showed that a deep LSTM network outperformed traditional deep neural networks for this problem.
-It was even better then a feed forward neural network with 10x more parameters \cite{sak2014longshorttermmemorybased}.\\
+term relationships. They have achieved state-of-the-art results in a paper by Google in 2014 \cite{sak2014longshorttermmemorybased}.
+Researchers at Google showed that a deep LSTM network outperformed traditional deep neural networks for this problem.
+It was even better than a feed forward neural network with 10x more parameters \cite{sak2014longshorttermmemorybased}.\\
 
 
 They used an LSTM variant called Long Short-Term Memory Projected (LSTMP) architecture \cite{sak2014longshorttermmemorybased} which
@@ -660,7 +658,7 @@ In their 2002 paper Eck and Schmidhuber use an LSTM network to generate chord pr
 
 A 7 layer LSTM network was trained to detect Type 2 diabetes in the early stages in Oman. The model is composed of five stacked
 LSTM layeres with 20 Units each feeding into a fully connected output layer. It reaches \begin{math}99.4 \%\end{math} accuracy and an 
-AUROC of \begin{math}0.945\end{math} while maintaining \begin{math}100 \%\end{math} sensitivity on a \begin{math}20 \%\end{math} hold-out set \cite{AlSadi2024LSTM}.
+AUROC (Area Under the Receiver Operating Characteristic curve) of \begin{math}0.945\end{math} while maintaining \begin{math}100 \%\end{math} sensitivity on a \begin{math}20 \%\end{math} hold-out set \cite{AlSadi2024LSTM}.
 These results surpass the logistic regression baseline.
 
 
