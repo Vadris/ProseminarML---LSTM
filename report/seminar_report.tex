@@ -108,7 +108,7 @@ Similarly, most forms of music contain structures and patterns, such as rhythms,
 In theory Recurrent Neural Networks can pick up on those patterns, but the algorithms used to train these networks, namely "Back-Propagation Through Time" (BPTT) or "Real-Time Recurrent Learning" (RTRL) had the problem of vanishing or exploding gradients, which made training RNNs impractical, when compared to traditional Feedforward Neural Networks. This problem gets amplified as the minimum lag between time steps increases.\cite{hochreiter1997lstm,werb1990bptt}\\
 The LSTM Architecture, as first described by Sepp Hochreiter and Jürgen Schmidhuber in their 1997 paper, "Long Short-Term Memory" and later refined by Felix A. Gers, Jürgen Schmidhuber and Fred Cummins in their paper "Learning to Forget: Continual Prediction with LSTM" published in 2000, aims to solve some of those issues, by introducing a modified version of the classical RNN structure, to improve the flow of the error signal through the network.\cite{hochreiter1997lstm}\\
 Since then, LSTM networks have played a significant role in the development of machine learning-based sequence modeling, most notably in natural language processing, time series forecasting, music generation, and speech recognition.\cite{eck2002musicgeneration,torres2022elctricityforecasting,gers2001timeseries,nielsen2024electricitypriceforcasting, gers2000lstmnlp}\\
-Section 2 will review a few important related works, then Section 3 will cover foundational concepts, such as feedforward neural networks and recurrent neural networks and will examine the problems that lead to the development of the LSTM architecture. Section 4 covers the principle of operation as well as mathematical formalization and experimental results.  In Section 5 limitations of the architecture will be examined as well as variations and alternatives, that might resolve some of those problems, and Section 6 examines possible applications for LSTMs.\\
+Section 2 will review some key related work. Section 3 will then cover foundational concepts such as feedforward and recurrent neural networks, examining the problems that led to the development of the LSTM architecture. Section 4 will cover the principle of operation, mathematical formalisation, and experimental results.  Section 5 will examine the limitations of the architecture, as well as variations and alternatives that might resolve some of these issues. Section 6 will examine possible applications for LSTMs.\\
 
 \section{Related Work (Leon)}
 
@@ -404,13 +404,13 @@ of other RNN Variants notably LSTM networks.
 
 \section{LSTM Architecture (Fynn)}
 
-This Section focuses on the Principle of Operation of the LSTM architecture, first trying to give an intuition to the operation of the architecture. Afterwards Networ
+This section focuses on the principle of operation of LSTMs, first providing an intuitive overview of how they work. Next, the most common LSTM network topology is covered, followed by an examination of both the original and modern mathematical formalization of the architecture.
 
 \subsection{Principle of Operation (Fynn)}
-This Section first explains some prepositional concepts that make up the LSTM Architecture such as the Constant Error Carousel and Gate Units, after which the construction and operation of the architecture is explained.
+This section first introduces some of the building blocks that comprise the LSTM architecture, such as the constant error carousel and gate units. It then explains how the architecture is constructed and operates.
 
 \subsubsection{Constant Error Carousel (Fynn)}
-Considering only a single neuron $j$, it is possible to archive Constant Error Flow through time, by fixing the weight of its feedback connection $w_{jj}=1$ and choosing the linear activation function $f_j(x)=x\ \forall x$. This construction, shown in Figure \ref{fig:CEC}, is called a Constant Error Carousel (CEC).\cite{hochreiter1997lstm}
+For a single neuron $j$, it is possible to achieve constant error flow over time by setting the weight of its feedback connection $w_{jj}=1$ to 1 and selecting the linear activation function $f_j(x)=x\ \forall x$. This construction, shown in Figure \ref{fig:CEC}, is called a Constant Error Carousel (CEC).\cite{hochreiter1997lstm}
 \begin{center}
 \begin{tikzpicture}
 \node[circle,draw] (unit_j) {$f_j(x)=x$};
@@ -421,38 +421,41 @@ Considering only a single neuron $j$, it is possible to archive Constant Error F
 \captionof{figure}{Single Neuron Constant Error Carousel\\Source: Based on \cite{hochreiter1997lstm}} 
 \label{fig:CEC}
 \end{center}
-This works as the Error Backflow gets scaled by $f'_j(net_j(t))w_{jj}$ (where $net_j(t)$ is the activation of the neuron $j$ at time $t$) at every time step, which is why ensuring this expression remains fixed at $1$ mitigates exploding and vanishing gradients. As $f'(x)=1$ this is the case for arbitrary $net_j(t)$ with the chosen activation function and weight.\cite{hochreiter1997lstm} \\
-Although this in theory fixes the problem of exploding and vanishing gradients in Recurrent Neural Networks, it leads to new problems in practice that make this solution impractical without further modifications. Consider some other neuron $i$ with activation $y^i(t)$ which is connected to $j$ with the weight $w_{ji}$.  Now For each time step, $y^i(t)w_{ji}$ gets added to the activation of $j$ at the previous time step. This makes the CEC a sort of memory, storing the previous inputs of the sequence by adding them together.\cite{hochreiter1997lstm} \\
-But as $w_{ji}$ is the only way to control if the activations of $i$ should be stored in memory, it often receives conflicting weight update signals during training, making the training unstable. Similarly the output from the CEC's memory to another neuron $k$ is only controlled with a single weight $w_{jk}$, which also leads to unstable training. Further the storing and retrieving of the memory of $j$ often depends on the context, therefore a context sensitive mechanism is needed to control the access to the CEC's memory.\cite{hochreiter1997lstm}
+This works because the error backflow is scaled by  $f'_j(net_j(t))w_{jj}$ (where $net_j(t)$ is the activation of neuron $j$ at time $t$) at every time step. This is why ensuring this expression remains fixed at 1 mitigates exploding and vanishing gradients. Since $f'(x)=1$, this is the case for the chosen activation function and weight.\cite{hochreiter1997lstm} \\
+While this theoretically solves the problem of exploding and vanishing gradients in recurrent neural networks, it introduces new issues in practice, rendering the solution impractical without further modifications. Consider another neuron, $i$, with an activation, $y^i(t)$, that is connected to neuron $j$ with a weight, $w_{ji}.$  For each time step, the activation of $j$ at the previous time step is added to $y^i(t)w_{ji}$. This makes the CEC a type of memory that stores previous inputs by adding them together.\cite{hochreiter1997lstm} \\
+However, as $w_{ji}$ is the only factor determining whether the activations of $i$ are stored in memory, it often receives conflicting weight update signals during training, resulting in unstable training. Similarly, the output from the CEC's memory to another neuron $k$ is controlled by a single weight, $w_{jk}$, which also leads to unstable training. Furthermore, storing and retrieving the memory of $j$ often depends on the context; therefore, a context-sensitive mechanism is needed to control access to the CEC's memory.\cite{hochreiter1997lstm}
 
 \subsubsection{Gate Units (Fynn)}
-The solution to the this problem proposed by Hochreiter and Schmidhuber is the so-called 'gate-unit'.\cite{hochreiter1997lstm} \\
-Gate units allow to restrict the flow of information to and from a neuron, based on the context.\\
-They work by scaling an input by multiplying it with a number computed from the context. This scaling factor is computed like with a regular neuron, where inputs from other neurons are added in a weighted sum and the result is passed through an activation function.\cite{hochreiter1997lstm}
+
+Hochreiter and Schmidhuber proposed a solution to this problem in the form of the so-called 'gate unit'.\cite{hochreiter1991}\\
+Gate units allow the flow of information to and from a neuron to be restricted based on the context.
+They work by scaling an input by multiplying it by a number computed from the context. This scaling factor is computed in the same way as for a regular neuron, where inputs from other neurons are added together to form a weighted sum, which is then passed through an activation function..\cite{hochreiter1997lstm}
 
 \subsubsection{Memory Cell (Fynn)}
-Adding a Gate Unit to the input and output of an CEC in combination with the functions $g$ for scaling the input to the and the function $h$ for scaling the output, results in a structure called a Memory Cell or LSTM Cell, as shown in Figure \ref{fig:lstm-cell}. They are the building block of LSTM Networks, and replace conventional neurons.\cite{hochreiter1997lstm} \\
-The gate unit on the input side of the cell is often called input gate or update gate and the gate on the output side is called the output gate.\cite{hochreiter1997lstm} \\
+Combining a Gate Unit with the input and output of a CEC, along with the scaling functions $g$ and $h$, results in a structure known as a Memory Cell or LSTM Cell, as illustrated in Figure \ref{fig:lstm-cell}. These cells are the building blocks of LSTM networks and replace conventional neurons.\cite{hochreiter1997lstm} \\
+The gate unit on the input side of the cell is often referred to as the 'input gate' or 'update gate', while the gate on the output side is known as the 'output gate'.\cite{hochreiter1997lstm} \\
 \begin{figure}[h!]
     \centering
     \includegraphics[width=\linewidth]{LSTM-Cell-Diagram.png}
     \caption{LSTM Cell\\ Source: \cite{hochreiter1997lstm}}
     \label{fig:lstm-cell}
 \end{figure}
-The circles in Figure \ref{fig:lstm-cell}, represent neurons, with the arrows pointing in to them representing the inputs scaled by the according weights, the black dots represent multiplication.\cite{hochreiter1997lstm} \\
-The arrows in Figure \ref{fig:lstm-cell} pointing into the cell from the bottom are the inputs for the gate units. For each gate all inputs are scaled by their respective weights and summed together. The result is then passed through an activation function to get the gate activations $y^{in_j}$ and $y^{out_j}$, which are the values used to control the access to the cells memory.\cite{hochreiter1997lstm} \\
-On the left of Figure \ref{fig:lstm-cell} the cells input $net_{c_j}$ is computed in the same way as is done for the gate units, by summing the weighted inputs. This input then first gets scaled by the function $g$ and then scaled again by the input gates activation $y^{in_j}$ after which it reaches the cells internal CEC. \cite{hochreiter1997lstm} \\
-Here the new input gets added to the previous activation of the CEC, to update the cells internal memory, also referred to as the cells internal state.\cite{hochreiter1997lstm} \\
-Finally to generate an output from the cells memory, the output of the internal CEC gets first scaled by a function $h$ and then scaled again by the activation of the output gate $y^{out_j}$, in the same way as is done for the input gate. This results in the cell output activation $y^{c_j}$.\cite{hochreiter1997lstm} 
+
+The circles in Figure \ref{fig:lstm-cell} represent neurons. The arrows pointing into them represent scaled inputs, and the black dots represent multiplication.\cite{hochreiter1997lstm} \\
+The arrows pointing into the cell from the bottom represent the inputs for the gate units.
+The arrows pointing into the cell from the bottom in Figure \ref{fig:lstm-cell} represent the inputs for the gate units. For each gate, all inputs are scaled by their respective weights and summed together. The result is then passed through an activation function to obtain the gate activations, $y^{in_j}$ and $y^{out_j}$, which control access to the cell's memory.\cite{hochreiter1997lstm} \\
+In Figure \ref{fig:lstm-cell}, the cell's input, $net_{c_j}$, is computed in the same way as for the gate units by summing the weighted inputs. This input is then scaled first by the function $g$ and then by the input gate's activation $y^{in_j}$ , after which it reaches the cell's internal CEC. \cite{hochreiter1997lstm} \\
+Here, the new input is added to the previous CEC activation to update the cell's internal memory, also known as its internal state.\cite{hochreiter1997lstm} \\
+Finally, to generate an output from the cell's memory, the internal CEC output is first scaled by a function $h$ and then scaled again by the output gate activation $y^{out_j}$, in the same way as for the input gate. This results in the cell output activation, $y^{c_j}$.\cite{hochreiter1997lstm} 
 
 \subsection{Network Topology (Fynn)}
 
-In Hochreiters and Schmidhubers paper, the specific inputs for the cell and gates are not defined as they depend on the chosen Network topology. Possible inputs could be the outputs of input units, memory cells, gate units or conventional hidden units.\cite{hochreiter1997lstm}\\
-Most commonly used implementations of the LSTM Architecture, like the ones used included in machine learning librarys such as PyTorch or TensorFlow connect all the outputs of all cells, back to all the inputs and gate inputs of all the cells and biases to each input and gate input of each cell, as well as connecting other inputs, that do not depend on the state of the cells, to all inputs and gate inputs of all cells. \cite{smagulova2019notation, keras-lstm, real-pytorch-lstm, pytorch-lstm}
+In Hochreiter and Schmidhuber's paper, the specific inputs for the cells and gates are not defined, as these depend on the chosen network topology. These inputs could be the outputs of input units, memory cells, gate units, or conventional hidden units.\cite{hochreiter1997lstm}\\
+The most commonly used implementations of the LSTM architecture, such as those included in machine learning libraries like PyTorch and TensorFlow, connect all the outputs of each cell to all the inputs and gate inputs of each cell, as well as to each cell's biases. They also connect other inputs that do not depend on the state of the cells to all inputs and gate inputs of each cell.\cite{smagulova2019notation, keras-lstm, real-pytorch-lstm, pytorch-lstm}
 
 \subsection{Mathematical Formalization (Fynn)}
 
-This Section focuses on two ways of formalizing the architecture, the first being the original original formalization by Hochreiter and Schmidhuber, the second being a modern matrix formulation for the most commonly used network topology.
+This section focuses on two formalisation methods for the architecture. The first is the original formalisation by Hochreiter and Schmidhuber. The second is a modern matrix formulation for the most commonly used network topology.
 
 \subsubsection{Single Memory Cell (Fynn)}
 For a single memory cell $c_j$ the cell net input can be defined as:\cite{hochreiter1997lstm}
@@ -473,7 +476,7 @@ $$s_{c_j}(t)=s_{c_j}(t-1)+y_{in_j}(t)g\left(net_{c_j}(t)\right)\ \text{ for } t>
 Using this, the cells output can be calculated by scaling the cell state using the output gate activation:\cite{hochreiter1997lstm}
 $$y^{c_j}(t)=y^{out_j}(t)h\left(s_{c_j}(t)\right)$$
 \subsubsection{Block of Memory Cells (Fynn)}
-For the most commonly implemented network topology, where the cells outputs are fully connected to their inputs and gate inputs, as well as some additional inputs, which is also fully connected to the cell inputs and gate inputs, as well as all inputs having a bias, the block can be described using matrix notation:\cite{smagulova2019notation}
+For the most commonly implemented network topology, in which the cell outputs are fully connected to their inputs and gate inputs, as well as to some additional inputs which are also fully connected to the cell inputs and gate inputs and to all inputs, each of which has a bias, the block can be described using matrix notation:\cite{smagulova2019notation}
 \\
 The activation of all input gates can be described by:\cite{smagulova2019notation}
 $$i_t=\sigma\left(W^{(i)}x_t+U^{(i)}h_{t-1}+b^{(i)}\right)$$
@@ -496,37 +499,37 @@ Today the $\tanh$ function is commonly used for the functions $g$ and $h$.\cite{
 
 \subsection{Results (Fynn)}
 
-In their 1997 paper, Schmidhuber and Hochreiter compared the LSTM Architecture to other architectures for sequenced data, such as standard RNNs, trained with either Back Propagation Through Time (BPTT) or Real Time Recurrent Learning (RTRL), Elman nets, trained using the Elman's procedure, Recurrent Cascade-Correlation and neural sequencing chunking.\cite{hochreiter1997lstm}  \\
+In their 1997 paper, Schmidhuber and Hochreiter compared the LSTM architecture with other architectures for sequential data. These included standard recurrent neural networks (RNNs), which were trained using either back propagation through time (BPTT) or real-time recurrent learning (RTRL); Elman networks, which were trained using Elman's procedure; recurrent cascade-correlation; and neural sequencing chunking.\cite{hochreiter1997lstm}  \\
 
-In their first experiment they trained their networks on an embedded reber gammer. As shown in Figure \ref{fig:exp1res}, while BPTT and RTRL did not always learn the gammer, the LSTM architecture always managed to learn the task. Further it also managed to learn the task much faster than the other architectures.\cite{hochreiter1997lstm}
+In their first experiment, they trained their networks using an embedded reber grammar. As Figure \ref{fig:exp1res} shows, while BPTT and RTRL did not always learn the grammar, the LSTM architecture always managed to learn the task. Furthermore, it learned the task much faster than the other architectures.\cite{hochreiter1997lstm}
 \begin{figure}
     \centering
     \includegraphics[width=0.75\linewidth]{ResultsTask1.png}
-    \caption{Results of training the models on the embeded rber grammer, showing the percantage of successful trials, as well as the number of examples presented before success. The architectures compared in this table are Real Time Recurent Learning (RTRL), Elman net (ELM), Recurrent Cascade-Corellation (RCC) and LSTM\\Source: Taken from \cite{hochreiter1997lstm}}
+    \caption{Results of training the models on sequences with different time lags are shown, along with the percentage of successful trials and the number of training examples presented to the model until it learned the task. This table compares the following architectures: Real Time Recurrent Learning (RTRL), Back Propagation Through Time (BPTT) and Neural Sequence Chunking (CH). \\ Source: Taken from \cite{hochreiter1997lstm}}
     \label{fig:exp1res}
 \end{figure}
 
-The different architectures where also tested on noisy and noiseless sequences with long time lag.
-For this input symbols where encoded using one-hot encoding.\cite{hochreiter1997lstm, qiu2022onehot}
-\\ For the noise free sequences the models where trained on two similar sequences, one taking the form $(x, a_1, ..., a_n, x)$ the other the form $(y,a_1,...,a_n,y)$, so the model has to store the first token for $n$ time steps to be able to correctly predict the final token of the sequence.\cite{hochreiter1997lstm}\\
+The different architectures were also tested using noisy and noiseless sequences with a long time lag.
+For these inputs, one-hot encoding was used to encode the symbols.\cite{hochreiter1997lstm, qiu2022onehot}
+\\ For noise-free sequences, the models were trained on two similar sequences: one in the form of $(x, a_1, ..., a_n, x)$, and the other in the form of $(y, a_1, ..., a_n, y)$. This means that the model must store the first token for $n$ time steps in order to correctly predict the final token of the sequence.\cite{hochreiter1997lstm}\\
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.75\linewidth]{restask2.png}
     \caption{Results of training the models on sequences with different time lags, showing the percent of successful trials as well as the number of training examples till presented to the model until it learned the task. The architectures compared in this table are Real Time Recurrent Learning (RTRL), Back Propagation Through Time (BPTT) and neural sequence chunking (CH). \\Source: Taken from \cite{hochreiter1997lstm}}
     \label{fig:exp2res}
 \end{figure}
-As shown in Figure \ref{fig:exp2res}For short time lags like $n=4$ RTRL and BPTT are able to learn the task in some of the runs, with $n=10$ they always fail to learn the task. Neural sequence chunking was able to learn the task in some runs even with time lags as large as $n=100$. The LSTM architecture was again able to learn the task every time and again learned much faster than the other methods.\cite{hochreiter1997lstm}\\
+As shown in Figure \ref{fig:exp2res}, for short time lags such as $n=4$ , both RTRL and BPTT can learn the task in some runs. However, for $n=10$, they always fail. Neural sequence chunking was able to learn the task in some runs, even with time lags as large as $n=100$. The LSTM architecture learned the task every time and did so much faster than the other methods.\cite{hochreiter1997lstm}\\
 
-As in this experiment the chunker sometimes learned to predict the local regularities of the sequence, another experiment was run, where the subsequence $(a_1, ..., a_n)$ was replaced by a random sequence of length $n$. RTRL, BPTT, and the chunker all failed to learn the task, while LSTM was able to learn it every time.\cite{hochreiter1997lstm}\\
+As the chunker sometimes learned to predict local regularities in the sequence in this experiment, another experiment was run where the sequence of length $n$, $(a_1, ..., a_n)$, was replaced by a random sequence of the same length. The RTRL, BPTT and chunker models all failed to learn the task, whereas the LSTM model was able to learn it every time.\cite{hochreiter1997lstm}\\
 \\
-Another test was classification of seqeunces containing noise. For this sequences where generated where only the first $N$ elements gave information while the rest where noise and another test where noise was added to the data conveying information. In both cases the LSTM architecture could learn the given task.\cite{hochreiter1997lstm}
+Another test involved classifying sequences containing noise. For this, sequences were generated where only the first N elements contained information, while the rest were noise. Another test involved adding noise to data that contained information. In both cases, the LSTM architecture was able to learn the task at hand.\cite{hochreiter1997lstm}
 \\
-Another difficult task the LSTM architecture was able to solve was the adding problem.\cite{hochreiter1997lstm}\\
-Here sequences consist of pairs of numbers where the first is a real number between $-1.0$ and $1.0$ and the following number is $1.0$, $0.0$ or $-1.0$. The goal is to compute the sum of the first numbers in pairs, of which the second number is $1.0$. As with the other problem the LSTM architecture is able to learn the task and was able to process most testing sequences correctly . \cite{hochreiter1997lstm}\\
-In a similar task, where the network had to multiply the two marked numbers, where the LSTM architecture again was able to learn the task. \cite{hochreiter1997lstm}
+The LSTM architecture was also able to solve the addition problem.\cite{hochreiter1997lstm}\\
+Here, a sequence consists of a pair of numbers, where the first number is a real number between $-1.0$ and $1.0$, and the second number is $1.0$, $0.0$, or $-1.0$. The objective is to calculate the sum of the first number in each pair for which the second number is $1.0$. As with the previous problem, the LSTM architecture was able to learn the task and correctly process most of the test sequences.\cite{hochreiter1997lstm}\\
+In a similar task where the network had to multiply two marked numbers, the LSTM architecture was once again able to learn the task. \cite{hochreiter1997lstm}
 \section{Limitations and Alternatives (Fynn)}
 
-This Section will first review some of the limitations of LSTM Netoworks, afterwards Variations of the architecture will be discussed, that try to alleviate some of those issues. Further the LSTM Architecture will be compared to the Transformer Architecture, which has been replacing LSTMs in many applications.
+This section will first review some of the limitations of LSTM networks. Afterwards, variations of the architecture that attempt to address these issues will be discussed. Finally, the LSTM architecture will be compared to the Transformer architecture, which has replaced LSTMs in many applications.
 
 \subsection{Limitations (Fynn)}
 Although LSTMs solve some of the problems associated with classical RNNs, they also have some disadvantages, including:
@@ -543,8 +546,7 @@ Although LSTMs solve some of the problems associated with classical RNNs, they a
 
 \subsection{Variants (Fynn)}
 
-Many Variations of the LSTM Architecture have been developed to alleviate some of their Limitations. \\
-This Section will give an overview of some important Variations that exist, such as the addition of a forget gate or Bidirectional LSTMs.
+Many variations of the LSTM architecture have been developed to address some of its limitations. This section will provide an overview of some of the most important variations, such as the addition of a forget gate or bidirectional LSTMs.
 
 \subsubsection{LSTM with Forget Gate (Fynn)}
 \begin{figure}[h!]
@@ -574,7 +576,7 @@ $$f_t=\sigma\left(W^{(f)}x_t+U^{(f)}h_{t-1}+b^{(f)}\right)$$
 and the internal state's of the cells can be defined as:\cite{smagulova2019notation}
 $$C_t=g_t\odot i_t+f_t\odot C_{t-1}$$
 
-The addition of an forget gate is very common, and many LSTM implementations in commonly used machine learning frameworks include a forget gate.\cite{smagulova2019notation,keras-lstm, real-pytorch-lstm, pytorch-lstm} 
+The addition of a forget gate is very common, and many implementations of LSTMs in popular machine learning frameworks include one.\cite{smagulova2019notation,keras-lstm, real-pytorch-lstm, pytorch-lstm} 
 
 \subsubsection{Bidirectional LSTM (Leon)}
 
@@ -666,6 +668,83 @@ These results surpass the logistic regression baseline.
 The LSTM architecture introduced gate units and memory cells, effectively eliminating the vanishing gradient problem that had prevented RNNs from reaching their full potential.\cite{hochreiter1997lstm} 
 This enabled LSTMs to be used for tasks such as time series forecasting, music generation, and natural language processing.\cite{eck2002musicgeneration,nielsen2024electricitypriceforcasting,gers2001timeseries,torres2022elctricityforecasting,sak2014longshorttermmemorybased}\\
 Although LSTMs have been replaced by architectures such as transformers in many applications, they are still useful because they perform better with small datasets. This is why further research into improving the performance of this architecture is likely.\cite{alselwi2024lstmfuture} Furthermore, they will likely form the basis of new architectures. For example, LSTM-Transformer hybrid architectures already exist today. \cite{zhao2025lstmtransformerhybrid} 
+
+\appendix
+
+\section{Implementation (Fynn)}
+
+The following code is an implementation of the original LSTM Architecture as described in the original paper by Hochreiter and Schmidhuber using PyTorch. It takes inspiration from the keras implementation of the LSTM architecture and the implementation from a blog post on medium by the user "noplaxochia", but it leaves out the forget gate.
+
+\begin{lstlisting}
+import torch
+
+class LSTMCell(torch.nn.Module):
+    
+    size : int # Input Size (1D)
+    
+    w_i_c : torch.Tensor # Input gate weights
+    w_i_x : torch.Tensor # Input gate weights
+    w_c_c : torch.Tensor # Cell gate weights
+    w_c_x : torch.Tensor # Cell gate weights
+    w_o_c : torch.Tensor # Output gate weights
+    w_o_x : torch.Tensor # Output gate weights
+    
+    b_i : torch.Tensor # Input gate biases
+    b_c : torch.Tensor # Cell gate biases
+    b_o : torch.Tensor # Output gate biases
+    
+    def __init__(self, size : int):
+        super(LSTMCell, self).__init__()
+        self.size = size
+
+        # Initialize weights and biases        
+        self.w_i_c = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        self.w_i_x = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        self.w_c_c = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        self.w_c_x = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        self.w_o_c = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        self.w_o_x = torch.nn.Parameter(torch.randn(size, size) * 0.01)
+        
+        self.b_i = torch.nn.Parameter(torch.zeros(size))
+        self.b_c = torch.nn.Parameter(torch.zeros(size))
+        self.b_o = torch.nn.Parameter(torch.zeros(size))    
+        
+    @staticmethod
+    def _f(x: torch.Tensor) -> torch.Tensor:
+        """Gate unit logistic sigmoid with range [0, 1]."""
+        return torch.sigmoid(x)
+    
+    @staticmethod
+    def _g(x: torch.Tensor) -> torch.Tensor:
+        """Function g with range [-2, 2]."""
+        return torch.sigmoid(x) * 4 - torch.ones_like(x) * 2
+    
+    @staticmethod
+    def _h(x: torch.Tensor) -> torch.Tensor:
+        """Function h with range [-1, 1]."""
+        return torch.sigmoid(x) * 2 - torch.ones_like(x)
+    
+    def forward(self, x_t : torch.Tensor, y_tm1 : torch.Tensor, c_tm1 : torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        # Ensure x_t is the right shape for matrix multiplication
+        if x_t.dim() == 0:  # scalar
+            x_t = x_t.unsqueeze(0)
+        
+        #Input gate
+        net_i = self.w_i_c @ y_tm1 + self.w_i_x @ x_t + self.b_i
+        i_t   = self._f(net_i)
+        
+        # Output gate
+        net_o = self.w_o_c @ y_tm1 + self.w_o_x @ x_t + self.b_o
+        o_t   = self._f(net_o)
+        
+        # Cell gate & Update Cell state
+        # Compute cell gate
+        net_c = self.w_c_c @ y_tm1 + self.w_c_x @ x_t + self.b_c
+        c_t = c_tm1 + i_t * self._g(net_c) # Update cell state
+        y_t = o_t * self._h(c_t)           # Compute output
+        
+        return y_t, c_t
+\end{lstlisting}
 
 \bibliographystyle{alpha}
 \bibliography{abbrev,seminar_report}
